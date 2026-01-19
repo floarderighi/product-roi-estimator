@@ -14,29 +14,21 @@ const roleConfig = {
     label: 'Développeur',
     emoji: '👨‍💻',
     defaultCost: 10000,
-    color: 'bg-blue-100 border-blue-300 hover:bg-blue-200',
-    activeColor: 'bg-blue-200 border-blue-500',
   },
   pm: {
     label: 'Product Manager',
     emoji: '🎯',
     defaultCost: 9000,
-    color: 'bg-purple-100 border-purple-300 hover:bg-purple-200',
-    activeColor: 'bg-purple-200 border-purple-500',
   },
   designer: {
     label: 'Designer',
     emoji: '🎨',
     defaultCost: 8000,
-    color: 'bg-pink-100 border-pink-300 hover:bg-pink-200',
-    activeColor: 'bg-pink-200 border-pink-500',
   },
   qa: {
     label: 'QA',
     emoji: '🔍',
     defaultCost: 7000,
-    color: 'bg-green-100 border-green-300 hover:bg-green-200',
-    activeColor: 'bg-green-200 border-green-500',
   },
 };
 
@@ -86,89 +78,115 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange }: SquadB
   const totalCost = squad.reduce((sum, m) => sum + m.monthlyCost, 0) * timeMonths;
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl border-2 border-indigo-200">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-          👥 Composez votre Squad
-        </h3>
-        <div className="text-sm text-gray-600">
-          {squad.length} {squad.length > 1 ? 'personnes' : 'personne'}
-        </div>
-      </div>
-
-      {/* Squad Members */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-        {squad.map((member) => {
-          const config = roleConfig[member.role];
-          return (
-            <div
-              key={member.id}
-              className={`${config.activeColor} border-2 rounded-lg p-3 transition-all hover:shadow-md`}
+    <div className="space-y-6">
+      {/* Squad Section */}
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <h3 className="text-lg font-semibold text-gray-800">
+              👥 Composez votre Squad
+            </h3>
+            <InfoTooltip
+              term="Coût employeur"
+              definition="Indiquez le coût total employeur (salaire brut + charges patronales). En France, les charges patronales représentent environ 42% du salaire brut."
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-2xl">{config.emoji}</span>
-                  <span className="font-medium text-sm">{config.label}</span>
-                </div>
-                <button
-                  onClick={() => removeMember(member.id)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full p-1 transition-colors"
-                  aria-label="Retirer"
+              <div className="text-xs text-gray-700">
+                <p className="mb-2">Utilisez le simulateur URSSAF pour estimer le coût total :</p>
+                <a
+                  href="https://mon-entreprise.urssaf.fr/simulateurs/salaire-brut-net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-medium"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <span>Calculer mon coût employeur</span>
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
-                </button>
+                </a>
               </div>
-              <div className="flex items-center space-x-2">
+            </InfoTooltip>
+          </div>
+          <span className="text-sm text-gray-500">
+            {squad.length} {squad.length > 1 ? 'personnes' : 'personne'}
+          </span>
+        </div>
+
+        {/* Squad Members - Table Style */}
+        <div className="space-y-2 mb-4">
+          {squad.map((member) => {
+            const config = roleConfig[member.role];
+            return (
+              <div
+                key={member.id}
+                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-2xl">{config.emoji}</span>
+                <span className="font-medium text-sm flex-shrink-0 min-w-[120px]">
+                  {config.label}
+                </span>
                 <input
                   type="number"
                   value={member.monthlyCost}
                   onChange={(e) => updateMemberCost(member.id, Number(e.target.value))}
-                  className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   min={0}
                 />
-                <span className="text-xs text-gray-600 whitespace-nowrap">€/mois</span>
+                <span className="text-sm text-gray-600 flex-shrink-0">€/mois</span>
+                <button
+                  onClick={() => removeMember(member.id)}
+                  className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
+                  aria-label="Retirer"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+
+        {/* Add Member Buttons - Simplified */}
+        <div className="flex flex-wrap gap-2">
+          {(Object.keys(roleConfig) as Array<keyof typeof roleConfig>).map((role) => {
+            const config = roleConfig[role];
+            return (
+              <button
+                key={role}
+                onClick={() => addMember(role)}
+                className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-indigo-500 transition-all"
+              >
+                <span className="text-lg">{config.emoji}</span>
+                <span>+ {config.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Add Member Buttons */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-        {(Object.keys(roleConfig) as Array<keyof typeof roleConfig>).map((role) => {
-          const config = roleConfig[role];
-          return (
-            <button
-              key={role}
-              onClick={() => addMember(role)}
-              className={`${config.color} border-2 rounded-lg p-2 text-sm font-medium transition-all hover:scale-105 active:scale-95`}
-            >
-              <div className="text-xl mb-1">{config.emoji}</div>
-              <div className="text-xs">+ {config.label}</div>
-            </button>
-          );
-        })}
-      </div>
+      {/* Duration Section - Separated */}
+      <div className="bg-white p-6 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">
+            ⏱️ Durée du projet
+          </h3>
+          <span className="text-lg font-semibold text-indigo-600">
+            {timeMonths} mois
+          </span>
+        </div>
 
-      {/* Duration Slider */}
-      <div className="mb-4">
-        <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-          <span>⏱️ Durée du projet</span>
-        </label>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => onTimeChange(Math.max(1, timeMonths - 1))}
-            className="w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-100 hover:border-primary-500 transition-all active:scale-95"
+            className="w-10 h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
           >
-            <span className="text-lg font-bold">-</span>
+            <span className="text-lg font-bold text-gray-600">−</span>
           </button>
           <div className="flex-1">
             <input
               type="range"
               min={1}
-              max={12}
+              max={24}
               step={1}
               value={timeMonths}
               onChange={(e) => onTimeChange(Number(e.target.value))}
@@ -176,27 +194,24 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange }: SquadB
             />
           </div>
           <button
-            onClick={() => onTimeChange(Math.min(12, timeMonths + 1))}
-            className="w-8 h-8 flex items-center justify-center bg-white border-2 border-gray-300 rounded-lg hover:bg-gray-100 hover:border-primary-500 transition-all active:scale-95"
+            onClick={() => onTimeChange(Math.min(24, timeMonths + 1))}
+            className="w-10 h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
           >
-            <span className="text-lg font-bold">+</span>
+            <span className="text-lg font-bold text-gray-600">+</span>
           </button>
-          <span className="text-lg font-semibold text-primary-600 min-w-[60px] text-center">
-            {timeMonths} mois
-          </span>
         </div>
       </div>
 
       {/* Total Cost Display */}
-      <div className="bg-white rounded-lg p-4 border-2 border-indigo-300">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">💰 Coût total de delivery</span>
-          <span className="text-2xl font-bold text-indigo-600">
+      <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-200">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-sm font-medium text-gray-700">💰 Coût total de delivery</span>
+          <span className="text-3xl font-bold text-indigo-600">
             {totalCost.toLocaleString()} €
           </span>
         </div>
-        <div className="text-xs text-gray-500 mt-1">
-          {squad.length} × {timeMonths} mois = {(squad.length * timeMonths).toLocaleString()} personnes-mois
+        <div className="text-xs text-gray-600">
+          {squad.length} × {timeMonths} mois = {(squad.length * timeMonths)} personnes-mois
         </div>
       </div>
 

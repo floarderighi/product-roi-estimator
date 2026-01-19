@@ -182,6 +182,13 @@ export const glossary: Record<string, GlossaryEntry> = {
     defaultValue: 'Généralement 10-20% du coût de delivery annualisé',
   },
 
+  hourlyRate: {
+    term: 'Taux horaire chargé',
+    definition: 'Coût horaire complet incluant le salaire brut, les charges patronales (~42%) et l\'overhead (~20% pour bureau, outils, management). Formule : Salaire annuel × 1.42 × 1.2 ÷ 1600h.',
+    example: 'Un salarié à 35k€/an brut → 35k × 1.42 × 1.2 ÷ 1600h = 37€/h chargé',
+    defaultValue: 'Support junior: 25-35€/h | Support confirmé: 35-50€/h | Expert: 50-75€/h',
+  },
+
   // Adoption & Timing
   rampUp: {
     term: 'Période de Ramp-up',

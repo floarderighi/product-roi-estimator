@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Slider } from '@/components/ui/Slider';
 import { MarginCalculator } from '@/components/ui/MarginCalculator';
+import { HourlyRateCalculator } from '@/components/ui/HourlyRateCalculator';
 import { ModeToggle } from '@/components/ui/ModeToggle';
 import { SquadBuilder } from '@/components/ui/SquadBuilder';
 import { NumberStepper } from '@/components/ui/NumberStepper';
@@ -37,6 +38,9 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   const [rampUp, setRampUp] = useState<RampUpPeriod>('3-months');
   const [horizon, setHorizon] = useState(24);
   const [isExpertMode, setIsExpertMode] = useState(false);
+  const [costSubStep, setCostSubStep] = useState(0); // For guided cost assessment (0: squad, 1: run costs)
+  const [riskSubStep, setRiskSubStep] = useState(0); // For guided risk assessment
+  const [confidenceSubStep, setConfidenceSubStep] = useState(0); // For guided confidence assessment
 
   const [risks, setRisks] = useState<RiskInputs>({
     marketRisk: 3,
@@ -55,16 +59,63 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   const templates = getAllTemplates();
 
   const handleNext = () => {
+    // Special handling for cost step (step 2)
+    if (step === 2 && costSubStep < 1) {
+      setCostSubStep(costSubStep + 1);
+      return;
+    }
+
+    // Special handling for risk step (step 3)
+    if (step === 3 && riskSubStep < 2) {
+      setRiskSubStep(riskSubStep + 1);
+      return;
+    }
+
+    // Special handling for confidence step (step 4)
+    if (step === 4 && confidenceSubStep < 2) {
+      setConfidenceSubStep(confidenceSubStep + 1);
+      return;
+    }
+
     if (step < steps.length - 1) {
       setStep(step + 1);
+      setCostSubStep(0); // Reset substeps
+      setRiskSubStep(0);
+      setConfidenceSubStep(0);
     } else {
       handleSubmit();
     }
   };
 
   const handleBack = () => {
+    // Special handling for cost step (step 2)
+    if (step === 2 && costSubStep > 0) {
+      setCostSubStep(costSubStep - 1);
+      return;
+    }
+
+    // Special handling for risk step (step 3)
+    if (step === 3 && riskSubStep > 0) {
+      setRiskSubStep(riskSubStep - 1);
+      return;
+    }
+
+    // Special handling for confidence step (step 4)
+    if (step === 4 && confidenceSubStep > 0) {
+      setConfidenceSubStep(confidenceSubStep - 1);
+      return;
+    }
+
     if (step > 0) {
       setStep(step - 1);
+      // Set substep to last question when going back
+      if (step - 1 === 2) {
+        setCostSubStep(1);
+      } else if (step - 1 === 3) {
+        setRiskSubStep(2);
+      } else if (step - 1 === 4) {
+        setConfidenceSubStep(2);
+      }
     }
   };
 
@@ -315,6 +366,19 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                       defaultRevenue={Number(templateInputs['currentMRR']) || 100000}
                     />
                   )}
+
+                  {/* Show HourlyRateCalculator for hourlyRate field */}
+                  {input.id === 'hourlyRate' && (
+                    <HourlyRateCalculator
+                      onCalculated={(rate) =>
+                        setTemplateInputs({
+                          ...templateInputs,
+                          hourlyRate: rate,
+                        })
+                      }
+                      defaultAnnualSalary={35000}
+                    />
+                  )}
                 </div>
               );
             })}
@@ -324,229 +388,335 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
 
       {step === 2 && (
         <div className="animate-fade-in">
-          <h2 className="text-2xl font-bold mb-2">💰 Investissement & Coûts</h2>
-          <p className="text-gray-600 mb-6">Estimez les coûts de delivery et de run</p>
-
-          <div className="space-y-6">
-            {/* Squad Builder - Replace old delivery cost inputs */}
-            <SquadBuilder
-              timeMonths={deliveryCost.timeMonths}
-              onTimeChange={(months) =>
-                setDeliveryCost({ ...deliveryCost, timeMonths: months })
-              }
-              onSquadChange={(people, avgCost) =>
-                setDeliveryCost({ ...deliveryCost, people, monthlyCost: avgCost })
-              }
-            />
-
-            <NumberStepper
-              label="Coût Run Mensuel"
-              emoji="💳"
-              value={runCost}
-              onChange={setRunCost}
-              min={0}
-              max={50000}
-              step={100}
-              unit="€/mois"
-              helpText="Coûts récurrents (licences, infrastructure, support)"
-              tooltip={getGlossaryEntry('runCost')}
-            />
-
-            <div>
-              <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                <span>Période de Ramp-up</span>
-                {getGlossaryEntry('rampUp') && (
-                  <div className="inline-block">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const entry = getGlossaryEntry('rampUp');
-                        if (entry) {
-                          alert(`${entry.term}\n\n${entry.definition}\n\n${entry.example ? '💡 ' + entry.example : ''}`);
-                        }
-                      }}
-                      className="inline-flex items-center justify-center w-5 h-5 ml-1.5 text-xs font-medium text-primary-600 bg-primary-50 rounded-full hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
-                      aria-label="Information about Période de Ramp-up"
-                    >
-                      <svg
-                        className="w-3 h-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                )}
-              </label>
-              <select
-                value={rampUp}
-                onChange={(e) => setRampUp(e.target.value as RampUpPeriod)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="instant">Instantané (impact immédiat)</option>
-                <option value="3-months">3 mois</option>
-                <option value="6-months">6 mois</option>
-                <option value="12-months">12 mois</option>
-              </select>
-            </div>
-
-            <NumberStepper
-              label="Horizon Temporel"
-              emoji="📅"
-              value={horizon}
-              onChange={setHorizon}
-              min={6}
-              max={60}
-              step={6}
-              unit="mois"
-              helpText="Période sur laquelle mesurer l'impact"
-            />
+          {/* Progress indicator for cost questions */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {[0, 1].map((index) => (
+              <div
+                key={index}
+                className={`h-2 rounded-full transition-all ${
+                  index === costSubStep
+                    ? 'w-8 bg-primary-600'
+                    : index < costSubStep
+                    ? 'w-2 bg-primary-400'
+                    : 'w-2 bg-gray-300'
+                }`}
+              />
+            ))}
           </div>
+
+          {/* Sub-step 1: Squad and Delivery Cost */}
+          {costSubStep === 0 && (
+            <div>
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                👥 Composition de l'équipe
+              </h2>
+              <p className="text-gray-600 mb-6 text-center text-lg">
+                Définissez votre équipe projet et la durée du développement
+              </p>
+
+              <SquadBuilder
+                timeMonths={deliveryCost.timeMonths}
+                onTimeChange={(months) =>
+                  setDeliveryCost({ ...deliveryCost, timeMonths: months })
+                }
+                onSquadChange={(people, avgCost) =>
+                  setDeliveryCost({ ...deliveryCost, people, monthlyCost: avgCost })
+                }
+              />
+            </div>
+          )}
+
+          {/* Sub-step 2: Run Costs and Timeline */}
+          {costSubStep === 1 && (
+            <div>
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                💳 Coûts récurrents & Horizon
+              </h2>
+              <p className="text-gray-600 mb-6 text-center text-lg">
+                Estimez les coûts mensuels de run et l'horizon temporel
+              </p>
+
+              <div className="space-y-6 max-w-2xl mx-auto">
+                <NumberStepper
+                  label="Coût Run Mensuel"
+                  emoji="💳"
+                  value={runCost}
+                  onChange={setRunCost}
+                  min={0}
+                  max={50000}
+                  step={100}
+                  unit="€/mois"
+                  helpText="Coûts récurrents (licences, infrastructure, support)"
+                  tooltip={getGlossaryEntry('runCost')}
+                />
+
+                <NumberStepper
+                  label="Période de Ramp-up"
+                  emoji="📈"
+                  value={rampUp === 'instant' ? 0 : rampUp === '3-months' ? 3 : rampUp === '6-months' ? 6 : 12}
+                  onChange={(value) => {
+                    if (value === 0) setRampUp('instant');
+                    else if (value === 3) setRampUp('3-months');
+                    else if (value === 6) setRampUp('6-months');
+                    else setRampUp('12-months');
+                  }}
+                  min={0}
+                  max={12}
+                  step={3}
+                  unit="mois"
+                  helpText="Temps nécessaire pour atteindre le plein impact"
+                  tooltip={getGlossaryEntry('rampUp')}
+                />
+
+                <NumberStepper
+                  label="Horizon Temporel"
+                  emoji="📅"
+                  value={horizon}
+                  onChange={setHorizon}
+                  min={6}
+                  max={60}
+                  step={6}
+                  unit="mois"
+                  helpText="Période sur laquelle mesurer l'impact"
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {step === 3 && (
         <div className="animate-fade-in">
-          <h2 className="text-2xl font-bold mb-2">⚠️ Évaluation des Risques</h2>
-          <p className="text-gray-600 mb-6">Évaluez les principaux risques de cette initiative sur une échelle de 1 à 5</p>
-
-          <div className="space-y-4">
-            <RiskSlider
-              label="🎯 Risque Marché"
-              value={risks.marketRisk}
-              onChange={(value) => setRisks({ ...risks, marketRisk: value })}
-              helpText="Adoption utilisateur, concurrence, changements de marché"
-              tooltip={getGlossaryEntry('marketRisk')}
-            />
-            <RiskSlider
-              label="⚙️ Risque Technique"
-              value={risks.technicalRisk}
-              onChange={(value) => setRisks({ ...risks, technicalRisk: value })}
-              helpText="Complexité d'implémentation, dette technique, dépendances"
-              tooltip={getGlossaryEntry('technicalRisk')}
-            />
-            <RiskSlider
-              label="⏱️ Risque Time-to-Market"
-              value={risks.timeToMarketRisk}
-              onChange={(value) => setRisks({ ...risks, timeToMarketRisk: value })}
-              helpText="Dérive du scope, retards, disponibilité des ressources"
-            />
+          {/* Progress indicator for risk questions */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {[0, 1, 2].map((index) => (
+              <div
+                key={index}
+                className={`h-2 rounded-full transition-all ${
+                  index === riskSubStep
+                    ? 'w-8 bg-primary-600'
+                    : index < riskSubStep
+                    ? 'w-2 bg-primary-400'
+                    : 'w-2 bg-gray-300'
+                }`}
+              />
+            ))}
           </div>
+
+          {/* Question 1: Market Risk */}
+          {riskSubStep === 0 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                🎯 Quel est le risque que les utilisateurs n'adoptent pas la fonctionnalité ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Considérez l'appétence des utilisateurs, la concurrence et le timing
+              </p>
+
+              <RiskSlider
+                label="Risque Marché"
+                value={risks.marketRisk}
+                onChange={(value) => setRisks({ ...risks, marketRisk: value })}
+                helpText="1 = Adoption certaine • 5 = Adoption très incertaine"
+                tooltip={getGlossaryEntry('marketRisk')}
+              />
+            </div>
+          )}
+
+          {/* Question 2: Technical Risk */}
+          {riskSubStep === 1 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                ⚙️ Quelle est la complexité technique ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Difficulté d'implémentation, dette technique, dépendances
+              </p>
+
+              <RiskSlider
+                label="Risque Technique"
+                value={risks.technicalRisk}
+                onChange={(value) => setRisks({ ...risks, technicalRisk: value })}
+                helpText="1 = Très simple • 5 = Très complexe"
+                tooltip={getGlossaryEntry('technicalRisk')}
+              />
+            </div>
+          )}
+
+          {/* Question 3: Time-to-Market Risk */}
+          {riskSubStep === 2 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                ⏱️ Quel est le risque de retard ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Dérive du scope, disponibilité des ressources, blocages
+              </p>
+
+              <RiskSlider
+                label="Risque Time-to-Market"
+                value={risks.timeToMarketRisk}
+                onChange={(value) => setRisks({ ...risks, timeToMarketRisk: value })}
+                helpText="1 = Très prévisible • 5 = Très incertain"
+                tooltip={getGlossaryEntry('timeToMarketRisk')}
+              />
+            </div>
+          )}
         </div>
       )}
 
       {step === 4 && (
         <div className="animate-fade-in">
-          <h2 className="text-2xl font-bold mb-2">🎯 Inputs de Confiance</h2>
-          <p className="text-gray-600 mb-6">Aidez-nous à évaluer la fiabilité de vos estimations</p>
-
-          <div className="space-y-8">
-            <ConfidenceSelector
-              label="📊 Qualité des Données"
-              value={confidence.dataQuality}
-              onChange={(value) =>
-                setConfidence({ ...confidence, dataQuality: value as DataQuality })
-              }
-              options={[
-                {
-                  value: 'measured',
-                  label: 'Mesurée',
-                  emoji: '✅',
-                  description: 'Données réelles et vérifiées',
-                  color: 'bg-green-100 border-green-400 text-green-900',
-                },
-                {
-                  value: 'partial',
-                  label: 'Partiellement mesurée',
-                  emoji: '📈',
-                  description: 'Mix de données réelles et estimations',
-                  color: 'bg-blue-100 border-blue-400 text-blue-900',
-                },
-                {
-                  value: 'estimated',
-                  label: 'Estimée',
-                  emoji: '💭',
-                  description: 'Basée sur des hypothèses éclairées',
-                  color: 'bg-purple-100 border-purple-400 text-purple-900',
-                },
-              ]}
-              helpText="Quelle est la source de vos métriques ?"
-            />
-
-            <ConfidenceSelector
-              label="🔗 Dépendances"
-              value={confidence.dependencies}
-              onChange={(value) =>
-                setConfidence({
-                  ...confidence,
-                  dependencies: value as 'none' | '1-2' | '3+',
-                })
-              }
-              options={[
-                {
-                  value: 'none',
-                  label: 'Aucune',
-                  emoji: '🚀',
-                  description: 'Projet autonome, pas de blocage',
-                  color: 'bg-green-100 border-green-400 text-green-900',
-                },
-                {
-                  value: '1-2',
-                  label: '1-2 dépendances',
-                  emoji: '🤝',
-                  description: 'Quelques dépendances gérables',
-                  color: 'bg-yellow-100 border-yellow-400 text-yellow-900',
-                },
-                {
-                  value: '3+',
-                  label: '3+ dépendances',
-                  emoji: '🕸️',
-                  description: 'Plusieurs équipes impliquées',
-                  color: 'bg-orange-100 border-orange-400 text-orange-900',
-                },
-              ]}
-              helpText="Combien d'équipes ou de systèmes externes sont nécessaires ?"
-            />
-
-            <ConfidenceSelector
-              label="🔬 Preuve d'Amélioration"
-              value={confidence.upliftNature}
-              onChange={(value) =>
-                setConfidence({ ...confidence, upliftNature: value as UpliftNature })
-              }
-              options={[
-                {
-                  value: 'ab-test',
-                  label: 'Test A/B',
-                  emoji: '🧪',
-                  description: 'Validé par test ou données historiques',
-                  color: 'bg-green-100 border-green-400 text-green-900',
-                },
-                {
-                  value: 'analogy',
-                  label: 'Analogie',
-                  emoji: '🔄',
-                  description: 'Basé sur une feature similaire',
-                  color: 'bg-blue-100 border-blue-400 text-blue-900',
-                },
-                {
-                  value: 'intuition',
-                  label: 'Intuition',
-                  emoji: '💡',
-                  description: 'Hypothèse basée sur l\'expérience',
-                  color: 'bg-purple-100 border-purple-400 text-purple-900',
-                },
-              ]}
-              helpText="Sur quoi repose votre estimation d'amélioration ?"
-            />
+          {/* Progress indicator for confidence questions */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {[0, 1, 2].map((index) => (
+              <div
+                key={index}
+                className={`h-2 rounded-full transition-all ${
+                  index === confidenceSubStep
+                    ? 'w-8 bg-primary-600'
+                    : index < confidenceSubStep
+                    ? 'w-2 bg-primary-400'
+                    : 'w-2 bg-gray-300'
+                }`}
+              />
+            ))}
           </div>
+
+          {/* Question 1: Data Quality */}
+          {confidenceSubStep === 0 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                📊 Quelle est la qualité de vos données ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Vos métriques sont-elles mesurées ou estimées ?
+              </p>
+
+              <ConfidenceSelector
+                label="Qualité des Données"
+                value={confidence.dataQuality}
+                onChange={(value) =>
+                  setConfidence({ ...confidence, dataQuality: value as DataQuality })
+                }
+                options={[
+                  {
+                    value: 'measured',
+                    label: 'Mesurée',
+                    emoji: '✅',
+                    description: 'Données réelles et vérifiées',
+                    color: 'bg-green-100 border-green-400 text-green-900',
+                  },
+                  {
+                    value: 'partial',
+                    label: 'Partiellement mesurée',
+                    emoji: '📈',
+                    description: 'Mix de données réelles et estimations',
+                    color: 'bg-blue-100 border-blue-400 text-blue-900',
+                  },
+                  {
+                    value: 'estimated',
+                    label: 'Estimée',
+                    emoji: '💭',
+                    description: 'Basée sur des hypothèses éclairées',
+                    color: 'bg-purple-100 border-purple-400 text-purple-900',
+                  },
+                ]}
+                helpText=""
+              />
+            </div>
+          )}
+
+          {/* Question 2: Dependencies */}
+          {confidenceSubStep === 1 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                🔗 Combien de dépendances avez-vous ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Équipes, systèmes externes ou projets nécessaires
+              </p>
+
+              <ConfidenceSelector
+                label="Dépendances"
+                value={confidence.dependencies}
+                onChange={(value) =>
+                  setConfidence({
+                    ...confidence,
+                    dependencies: value as 'none' | '1-2' | '3+',
+                  })
+                }
+                options={[
+                  {
+                    value: 'none',
+                    label: 'Aucune',
+                    emoji: '🚀',
+                    description: 'Projet autonome, pas de blocage',
+                    color: 'bg-green-100 border-green-400 text-green-900',
+                  },
+                  {
+                    value: '1-2',
+                    label: '1-2 dépendances',
+                    emoji: '🤝',
+                    description: 'Quelques dépendances gérables',
+                    color: 'bg-yellow-100 border-yellow-400 text-yellow-900',
+                  },
+                  {
+                    value: '3+',
+                    label: '3+ dépendances',
+                    emoji: '🕸️',
+                    description: 'Plusieurs équipes impliquées',
+                    color: 'bg-orange-100 border-orange-400 text-orange-900',
+                  },
+                ]}
+                helpText=""
+              />
+            </div>
+          )}
+
+          {/* Question 3: Uplift Nature */}
+          {confidenceSubStep === 2 && (
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold mb-3 text-center">
+                🔬 Sur quoi repose votre estimation d'amélioration ?
+              </h2>
+              <p className="text-gray-600 mb-8 text-center text-lg">
+                Avez-vous des preuves ou est-ce une hypothèse ?
+              </p>
+
+              <ConfidenceSelector
+                label="Preuve d'Amélioration"
+                value={confidence.upliftNature}
+                onChange={(value) =>
+                  setConfidence({ ...confidence, upliftNature: value as UpliftNature })
+                }
+                options={[
+                  {
+                    value: 'ab-test',
+                    label: 'Test A/B',
+                    emoji: '🧪',
+                    description: 'Validé par test ou données historiques',
+                    color: 'bg-green-100 border-green-400 text-green-900',
+                  },
+                  {
+                    value: 'analogy',
+                    label: 'Analogie',
+                    emoji: '🔄',
+                    description: 'Basé sur une feature similaire',
+                    color: 'bg-blue-100 border-blue-400 text-blue-900',
+                  },
+                  {
+                    value: 'intuition',
+                    label: 'Intuition',
+                    emoji: '💡',
+                    description: 'Hypothèse basée sur l\'expérience',
+                    color: 'bg-purple-100 border-purple-400 text-purple-900',
+                  },
+                ]}
+                helpText=""
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -555,7 +725,11 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           Retour
         </Button>
         <Button onClick={handleNext} disabled={!canProceed()}>
-          {step === steps.length - 1 ? 'Calculer le ROI' : 'Suivant'}
+          {step === steps.length - 1
+            ? 'Calculer le ROI'
+            : (step === 2 && costSubStep < 1) || (step === 3 && riskSubStep < 2) || (step === 4 && confidenceSubStep < 2)
+            ? 'Question suivante'
+            : 'Suivant'}
         </Button>
       </div>
     </div>

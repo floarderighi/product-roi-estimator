@@ -118,8 +118,8 @@ export const contextualHelpMap: Record<BusinessModelType, Record<string, Context
     },
     hourlyRate: {
       placeholder: 'ex: 35',
-      hint: 'Coût horaire chargé',
-      typicalRange: 'Junior: 25-35€/h | Mid: 35-50€/h | Senior: 50-75€/h',
+      hint: 'Coût total (salaire + charges + overhead). Utilisez le calculateur ci-dessous si besoin.',
+      typicalRange: 'Support N1: 25-35€/h | Support N2: 35-50€/h | Support N3/Expert: 50-75€/h',
     },
     grossMargin: {
       placeholder: 'ex: 100',
