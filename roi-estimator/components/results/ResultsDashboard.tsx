@@ -147,7 +147,7 @@ Généré avec Delva ROI Estimator
             <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
               <div className="text-sm text-gray-600 mb-1">Coût de Delivery</div>
               <div className="text-2xl font-bold text-gray-900">
-                {formatCurrency(result.initiative.deliveryCost)}
+                {formatCurrency(result.initiative.deliveryCost.people * result.initiative.deliveryCost.timeMonths * result.initiative.deliveryCost.monthlyCost)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Investissement initial</div>
             </div>
@@ -161,7 +161,7 @@ Généré avec Delva ROI Estimator
             <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
               <div className="text-sm text-gray-600 mb-1">Investissement Total</div>
               <div className="text-2xl font-bold text-indigo-600">
-                {formatCurrency(result.initiative.deliveryCost + result.initiative.runCost * result.initiative.horizon)}
+                {formatCurrency((result.initiative.deliveryCost.people * result.initiative.deliveryCost.timeMonths * result.initiative.deliveryCost.monthlyCost) + result.initiative.runCost * result.initiative.horizon)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Sur {result.initiative.horizon} mois</div>
             </div>

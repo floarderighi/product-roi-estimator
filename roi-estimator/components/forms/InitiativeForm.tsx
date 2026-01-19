@@ -155,12 +155,12 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
     const template = getTemplate(selectedModel);
 
     // In simple mode, fill missing values with defaults
-    let templateData = template.inputs.reduce((acc, input) => {
+    let templateData: Record<string, any> = template.inputs.reduce((acc, input) => {
       return {
         ...acc,
         [input.id]: templateInputs[input.id] || input.defaultValue || 0,
       };
-    }, {});
+    }, {} as Record<string, any>);
 
     // Apply intelligent defaults if in simple mode
     if (!isExpertMode) {
