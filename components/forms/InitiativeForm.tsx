@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BusinessModelType, InitiativeInputs, RiskInputs, ConfidenceInputs, DataQuality, UpliftNature, RampUpPeriod } from '@/types';
 import { getAllTemplates, getTemplate } from '@/lib/templates';
 import { Button } from '@/components/ui/Button';
@@ -28,12 +28,20 @@ interface InitiativeFormProps {
   ) => void;
 }
 
+const FORM_STORAGE_KEY = 'roi-estimator-form-data';
+
 export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   const [step, setStep] = useState(0);
   const [selectedModel, setSelectedModel] = useState<BusinessModelType | null>(null);
   const [projectName, setProjectName] = useState('');
   const [templateInputs, setTemplateInputs] = useState<Record<string, number>>({});
   const [deliveryCost, setDeliveryCost] = useState({ people: 2, timeMonths: 3, monthlyCost: 8000 });
+  const [squad, setSquad] = useState<Array<{
+    id: string;
+    role: 'dev' | 'pm' | 'designer' | 'qa';
+    level: 'junior' | 'confirmed' | 'senior';
+    monthlyCost: number;
+  }> | null>(null);
   const [runCost, setRunCost] = useState(500);
   const [rampUp, setRampUp] = useState<RampUpPeriod>('3-months');
   const [horizon, setHorizon] = useState(24);
@@ -41,6 +49,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   const [costSubStep, setCostSubStep] = useState(0); // For guided cost assessment (0: squad, 1: run costs)
   const [riskSubStep, setRiskSubStep] = useState(0); // For guided risk assessment
   const [confidenceSubStep, setConfidenceSubStep] = useState(0); // For guided confidence assessment
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [risks, setRisks] = useState<RiskInputs>({
     marketRisk: 3,
@@ -53,6 +62,60 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
     dependencies: '1-2',
     upliftNature: 'analogy' as UpliftNature,
   });
+
+  // Load saved form data on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedData = localStorage.getItem(FORM_STORAGE_KEY);
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          setStep(parsed.step || 0);
+          setSelectedModel(parsed.selectedModel || null);
+          setProjectName(parsed.projectName || '');
+          setTemplateInputs(parsed.templateInputs || {});
+          setDeliveryCost(parsed.deliveryCost || { people: 2, timeMonths: 3, monthlyCost: 8000 });
+          setSquad(parsed.squad || null);
+          setRunCost(parsed.runCost || 500);
+          setRampUp(parsed.rampUp || '3-months');
+          setHorizon(parsed.horizon || 24);
+          setIsExpertMode(parsed.isExpertMode || false);
+          setCostSubStep(parsed.costSubStep || 0);
+          setRiskSubStep(parsed.riskSubStep || 0);
+          setConfidenceSubStep(parsed.confidenceSubStep || 0);
+          setRisks(parsed.risks || { marketRisk: 3, technicalRisk: 3, timeToMarketRisk: 3 });
+          setConfidence(parsed.confidence || { dataQuality: 'partial', dependencies: '1-2', upliftNature: 'analogy' });
+        } catch (e) {
+          console.error('Failed to load saved form data:', e);
+        }
+      }
+      setIsLoaded(true);
+    }
+  }, []);
+
+  // Save form data whenever it changes
+  useEffect(() => {
+    if (isLoaded && typeof window !== 'undefined') {
+      const formData = {
+        step,
+        selectedModel,
+        projectName,
+        templateInputs,
+        deliveryCost,
+        squad,
+        runCost,
+        rampUp,
+        horizon,
+        isExpertMode,
+        costSubStep,
+        riskSubStep,
+        confidenceSubStep,
+        risks,
+        confidence,
+      };
+      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
+    }
+  }, [isLoaded, step, selectedModel, projectName, templateInputs, deliveryCost, squad, runCost, rampUp, horizon, isExpertMode, costSubStep, riskSubStep, confidenceSubStep, risks, confidence]);
 
   const steps = ['Template', 'Métriques', 'Coûts', 'Risques', 'Confiance'];
 
@@ -212,6 +275,11 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
       templateInputs: templateData,
     };
 
+    // Clear saved form data after successful submission
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(FORM_STORAGE_KEY);
+    }
+
     onComplete(initiative, risks, confidence);
   };
 
@@ -363,7 +431,12 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                           grossMargin: margin,
                         })
                       }
-                      defaultRevenue={Number(templateInputs['currentMRR']) || 100000}
+                      defaultRevenue={
+                        Number(templateInputs['currentMRR']) ||
+                        (selectedModel === 'saas' && templateInputs['payingCustomers'] && templateInputs['arpa']
+                          ? Number(templateInputs['payingCustomers']) * Number(templateInputs['arpa'])
+                          : 100000)
+                      }
                     />
                   )}
 
@@ -422,6 +495,8 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                 onSquadChange={(people, avgCost) =>
                   setDeliveryCost({ ...deliveryCost, people, monthlyCost: avgCost })
                 }
+                initialSquad={squad || undefined}
+                onSquadUpdate={(updatedSquad) => setSquad(updatedSquad)}
               />
             </div>
           )}
@@ -605,21 +680,21 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                     label: 'Mesurée',
                     emoji: '✅',
                     description: 'Données réelles et vérifiées',
-                    color: 'bg-green-100 border-green-400 text-green-900',
+                    color: 'bg-purple-100 border-purple-300 text-purple-900',
                   },
                   {
                     value: 'partial',
                     label: 'Partiellement mesurée',
                     emoji: '📈',
                     description: 'Mix de données réelles et estimations',
-                    color: 'bg-blue-100 border-blue-400 text-blue-900',
+                    color: 'bg-purple-200 border-purple-400 text-purple-900',
                   },
                   {
                     value: 'estimated',
                     label: 'Estimée',
                     emoji: '💭',
                     description: 'Basée sur des hypothèses éclairées',
-                    color: 'bg-purple-100 border-purple-400 text-purple-900',
+                    color: 'bg-purple-300 border-purple-500 text-purple-950',
                   },
                 ]}
                 helpText=""
@@ -652,21 +727,21 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                     label: 'Aucune',
                     emoji: '🚀',
                     description: 'Projet autonome, pas de blocage',
-                    color: 'bg-green-100 border-green-400 text-green-900',
+                    color: 'bg-purple-100 border-purple-300 text-purple-900',
                   },
                   {
                     value: '1-2',
                     label: '1-2 dépendances',
                     emoji: '🤝',
                     description: 'Quelques dépendances gérables',
-                    color: 'bg-yellow-100 border-yellow-400 text-yellow-900',
+                    color: 'bg-purple-200 border-purple-400 text-purple-900',
                   },
                   {
                     value: '3+',
                     label: '3+ dépendances',
                     emoji: '🕸️',
                     description: 'Plusieurs équipes impliquées',
-                    color: 'bg-orange-100 border-orange-400 text-orange-900',
+                    color: 'bg-purple-300 border-purple-500 text-purple-950',
                   },
                 ]}
                 helpText=""
@@ -696,21 +771,21 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                     label: 'Test A/B',
                     emoji: '🧪',
                     description: 'Validé par test ou données historiques',
-                    color: 'bg-green-100 border-green-400 text-green-900',
+                    color: 'bg-purple-100 border-purple-300 text-purple-900',
                   },
                   {
                     value: 'analogy',
                     label: 'Analogie',
                     emoji: '🔄',
                     description: 'Basé sur une feature similaire',
-                    color: 'bg-blue-100 border-blue-400 text-blue-900',
+                    color: 'bg-purple-200 border-purple-400 text-purple-900',
                   },
                   {
                     value: 'intuition',
                     label: 'Intuition',
                     emoji: '💡',
                     description: 'Hypothèse basée sur l\'expérience',
-                    color: 'bg-purple-100 border-purple-400 text-purple-900',
+                    color: 'bg-purple-300 border-purple-500 text-purple-950',
                   },
                 ]}
                 helpText=""

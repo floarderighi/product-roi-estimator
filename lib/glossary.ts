@@ -142,9 +142,9 @@ export const glossary: Record<string, GlossaryEntry> = {
   // Métriques Financières
   grossMargin: {
     term: 'Marge Brute',
-    definition: 'Pourcentage du revenu qui reste après avoir payé les coûts directs (serveurs, licences, support, etc.).',
+    definition: 'Pourcentage du revenu qui reste après avoir payé les coûts directs (serveurs, licences, support, etc.).\n\nValeurs moyennes France 2025 :\n• SaaS : 75-85% (médiane 80%)\n• E-commerce : 30-50% (selon secteur)\n• B2B Software : 70-80%\n• Cost-Reduction : 100% (économies pures)',
     example: 'Si tu vends un abonnement 100€ et que ça te coûte 20€ en infrastructure → Marge brute = 80%',
-    defaultValue: 'SaaS = 70-85% | E-commerce = 30-50% | Services = 50-70%',
+    defaultValue: 'Sources : FrenchWeb 2025, Rainmakers, Stripe',
   },
 
   paybackPeriod: {

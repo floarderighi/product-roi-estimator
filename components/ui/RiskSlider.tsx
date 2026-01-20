@@ -18,11 +18,11 @@ interface RiskSliderProps {
 }
 
 const riskLevels = [
-  { value: 1, label: 'Très faible', emoji: '😌', color: 'bg-green-100 border-green-400 text-green-700' },
-  { value: 2, label: 'Faible', emoji: '🙂', color: 'bg-lime-100 border-lime-400 text-lime-700' },
-  { value: 3, label: 'Moyen', emoji: '😐', color: 'bg-yellow-100 border-yellow-400 text-yellow-700' },
-  { value: 4, label: 'Élevé', emoji: '😟', color: 'bg-orange-100 border-orange-400 text-orange-700' },
-  { value: 5, label: 'Très élevé', emoji: '😰', color: 'bg-red-100 border-red-400 text-red-700' },
+  { value: 1, label: 'Très faible', emoji: '😌', color: 'bg-purple-50 border-purple-200 text-purple-600' },
+  { value: 2, label: 'Faible', emoji: '🙂', color: 'bg-purple-100 border-purple-300 text-purple-700' },
+  { value: 3, label: 'Moyen', emoji: '😐', color: 'bg-purple-200 border-purple-400 text-purple-800' },
+  { value: 4, label: 'Élevé', emoji: '😟', color: 'bg-purple-300 border-purple-500 text-purple-900' },
+  { value: 5, label: 'Très élevé', emoji: '😰', color: 'bg-purple-400 border-purple-600 text-purple-950' },
 ];
 
 export function RiskSlider({
@@ -83,7 +83,7 @@ export function RiskSlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-2 bg-gradient-to-r from-green-300 via-yellow-300 to-red-300 rounded-lg appearance-none cursor-pointer risk-slider"
+        className="w-full h-2 bg-gradient-to-r from-purple-200 via-purple-400 to-purple-600 rounded-lg appearance-none cursor-pointer risk-slider"
       />
 
       {/* Help Text */}

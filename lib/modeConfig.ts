@@ -34,7 +34,7 @@ export const simpleModeFields: Record<BusinessModelType, string[]> = {
 export const defaultValues: Record<BusinessModelType, Record<string, number>> = {
   'saas': {
     grossMargin: 80, // Marge SaaS typique
-    currentMRR: 50000, // Calculé à partir de payingCustomers * arpa si pas fourni
+    // currentMRR est calculé automatiquement à partir de payingCustomers * arpa (voir fillDefaultValues)
   },
   'ecommerce': {
     grossMargin: 40, // Marge e-commerce typique

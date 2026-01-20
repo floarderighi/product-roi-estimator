@@ -35,7 +35,7 @@ export function ModeToggle({ isExpertMode, onChange }: ModeToggleProps) {
       <div className="ml-4 pl-4 border-l border-blue-300">
         {!isExpertMode ? (
           <p className="text-xs text-gray-600">
-            <span className="font-semibold">Rapide :</span> On remplit les valeurs par défaut pour toi
+            <span className="font-semibold">Rapide :</span> Seulement les champs essentiels
           </p>
         ) : (
           <p className="text-xs text-gray-600">

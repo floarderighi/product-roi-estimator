@@ -89,7 +89,7 @@ export function NumberStepper({
             min={min}
             max={max}
             step={step}
-            className="w-full px-4 py-2.5 text-center text-lg font-semibold border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+            className="w-full px-4 py-2.5 text-center text-lg font-semibold border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           {unit && (
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 font-medium pointer-events-none">

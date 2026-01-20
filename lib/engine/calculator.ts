@@ -270,36 +270,36 @@ export class ROICalculator {
 
     // Identify top drivers
     if (inputs.uplift > 20) {
-      topDrivers.push(`High uplift expectation (${inputs.uplift}%)`);
+      topDrivers.push(`Forte attente d'amélioration (${inputs.uplift}%)`);
     }
     if (inputs.grossMargin > 70) {
-      topDrivers.push(`Strong gross margin (${inputs.grossMargin}%)`);
+      topDrivers.push(`Marge brute élevée (${inputs.grossMargin}%)`);
     }
     if (inputs.reach > 10000) {
-      topDrivers.push(`Large reach (${inputs.reach.toLocaleString()} units)`);
+      topDrivers.push(`Large portée (${inputs.reach.toLocaleString()} unités)`);
     }
 
     // Critical assumptions
     if (confidence.dataQuality === 'estimated') {
-      criticalAssumptions.push('Data quality is estimated - validate with real metrics');
+      criticalAssumptions.push('Les données sont estimées - valider avec des métriques réelles');
     }
     if (confidence.upliftNature === 'intuition') {
-      criticalAssumptions.push('Uplift based on intuition - run A/B test to validate');
+      criticalAssumptions.push('Amélioration basée sur l\'intuition - lancer un test A/B pour valider');
     }
     if (inputs.deliveryCost.timeMonths > 6) {
       criticalAssumptions.push(
-        `Long delivery timeline (${inputs.deliveryCost.timeMonths} months) - ensure scope control`
+        `Délai de livraison long (${inputs.deliveryCost.timeMonths} mois) - assurer le contrôle du périmètre`
       );
     }
 
     // Dominant risks
     const riskLevels = [
-      { name: 'Market risk', value: risks.marketRisk },
-      { name: 'Technical risk', value: risks.technicalRisk },
-      { name: 'Time-to-market risk', value: risks.timeToMarketRisk },
+      { name: 'Risque marché', value: risks.marketRisk },
+      { name: 'Risque technique', value: risks.technicalRisk },
+      { name: 'Risque time-to-market', value: risks.timeToMarketRisk },
     ];
     const highRisks = riskLevels.filter((r) => r.value >= 7);
-    dominantRisks.push(...highRisks.map((r) => `${r.name} is high (${r.value}/10)`));
+    dominantRisks.push(...highRisks.map((r) => `${r.name} est élevé (${r.value}/10)`));
 
     return {
       topDrivers: topDrivers.slice(0, 3),

@@ -15,6 +15,33 @@ export function getEncouragingMessage(result: CalculationResult): EncouragingMes
   const { paybackMonths, roi24, annualProfit } = baseScenario;
   const { confidenceScore } = result;
 
+  const isPositive = annualProfit > 0;
+
+  // Pour les projets déficitaires, message sobre sur la qualité de l'analyse
+  if (!isPositive) {
+    if (confidenceScore >= 70) {
+      return {
+        emoji: '📊',
+        title: 'Analyse fiable',
+        subtitle: `Score de confiance ${confidenceScore}/100 - Les données sont robustes`,
+      };
+    }
+    if (confidenceScore >= 40) {
+      return {
+        emoji: '📊',
+        title: 'Analyse complète',
+        subtitle: `Score de confiance ${confidenceScore}/100 - Quelques hypothèses à valider`,
+      };
+    }
+    return {
+      emoji: '📊',
+      title: 'Analyse préliminaire',
+      subtitle: `Score de confiance ${confidenceScore}/100 - Plusieurs hypothèses à confirmer`,
+    };
+  }
+
+  // Pour les projets rentables : messages encourageants
+
   // Cas 1: Excellent ROI + Payback rapide
   if (roi24 > 200 && paybackMonths < 6) {
     return {
@@ -51,16 +78,7 @@ export function getEncouragingMessage(result: CalculationResult): EncouragingMes
     };
   }
 
-  // Cas 5: Score de confiance élevé
-  if (confidenceScore > 80) {
-    return {
-      emoji: '🎯',
-      title: 'Score de confiance excellent !',
-      subtitle: `${confidenceScore}/100 - Vous avez bien préparé votre business case !`,
-    };
-  }
-
-  // Cas 6: ROI positif + Payback raisonnable
+  // Cas 5: ROI positif + Payback raisonnable
   if (roi24 > 50 && paybackMonths < 12) {
     return {
       emoji: '✨',
@@ -69,7 +87,7 @@ export function getEncouragingMessage(result: CalculationResult): EncouragingMes
     };
   }
 
-  // Cas 7: Bon équilibre
+  // Cas 6: Bon équilibre
   if (roi24 > 30) {
     return {
       emoji: '📈',
@@ -78,7 +96,7 @@ export function getEncouragingMessage(result: CalculationResult): EncouragingMes
     };
   }
 
-  // Cas 8: ROI faible mais positif
+  // Cas 7: ROI faible mais positif
   if (roi24 > 0) {
     return {
       emoji: '💡',
@@ -87,11 +105,11 @@ export function getEncouragingMessage(result: CalculationResult): EncouragingMes
     };
   }
 
-  // Cas 9: ROI négatif
+  // Fallback (ne devrait pas arriver)
   return {
-    emoji: '🔍',
+    emoji: '📊',
     title: 'Analyse terminée',
-    subtitle: 'Explorez les scénarios pour identifier les leviers d\'amélioration.',
+    subtitle: `Score de confiance ${confidenceScore}/100`,
   };
 }
 
