@@ -566,8 +566,17 @@ Généré avec Delva ROI Estimator
                 <div className="text-sm text-gray-700">
                   <span className="font-semibold">Exemple pour votre projet :</span>
                   <ul className="list-disc list-inside mt-2 space-y-1 ml-2">
-                    <li>Gain annuel estimé : {formatCurrency(result.initiative.templateInputs.reach * result.initiative.templateInputs.value * (result.initiative.templateInputs.uplift / 100))}</li>
-                    <li>Marge brute ({result.initiative.templateInputs.grossMargin}%) : {formatCurrency(result.initiative.templateInputs.reach * result.initiative.templateInputs.value * (result.initiative.templateInputs.uplift / 100) * (result.initiative.templateInputs.grossMargin / 100))}</li>
+                    <li>Gain annuel estimé : {formatCurrency(
+                      Number(result.initiative.templateInputs.reach || 0) *
+                      Number(result.initiative.templateInputs.value || 0) *
+                      (Number(result.initiative.templateInputs.uplift || 0) / 100)
+                    )}</li>
+                    <li>Marge brute ({result.initiative.templateInputs.grossMargin}%) : {formatCurrency(
+                      Number(result.initiative.templateInputs.reach || 0) *
+                      Number(result.initiative.templateInputs.value || 0) *
+                      (Number(result.initiative.templateInputs.uplift || 0) / 100) *
+                      (Number(result.initiative.templateInputs.grossMargin || 0) / 100)
+                    )}</li>
                     <li>Coût de run annuel : {formatCurrency(result.initiative.runCost * 12)}</li>
                     <li className="font-semibold text-purple-700">= Profit annuel : {formatCurrency(scenario.annualProfit)}</li>
                   </ul>
