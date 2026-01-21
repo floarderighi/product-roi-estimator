@@ -800,10 +800,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           Retour
         </Button>
         <Button onClick={handleNext} disabled={!canProceed()}>
-          {step === steps.length - 1
+          {(step === 2 && costSubStep < 1) || (step === 3 && riskSubStep < 2) || (step === 4 && confidenceSubStep < 2)
+            ? 'Suivant'
+            : step === steps.length - 1
             ? 'Calculer le ROI'
-            : (step === 2 && costSubStep < 1) || (step === 3 && riskSubStep < 2) || (step === 4 && confidenceSubStep < 2)
-            ? 'Question suivante'
             : 'Suivant'}
         </Button>
       </div>
