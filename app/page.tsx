@@ -6,7 +6,16 @@ import Image from 'next/image';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-delva-purple-dark via-primary-900 to-delva-purple-dark">
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage: 'url(https://cdn.prod.website-files.com/68a49c9ea5a26b2e61f21ba7/68b472cc0fb0dace93b48fda_background-hero.png)',
+        backgroundPosition: '0 0',
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-delva-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -29,16 +38,8 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/background.png"
-            alt=""
-            fill
-            className="object-cover opacity-20"
-            priority
-          />
-        </div>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-delva-purple-dark/80"></div>
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 rounded-full text-white text-sm font-semibold mb-8 border border-white/20 backdrop-blur-sm">
             <span>⚡</span>
@@ -135,8 +136,10 @@ export default function LandingPage() {
       </section>
 
       {/* Templates Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-20 px-6">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-delva-purple-dark/85"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
           <h2 className="text-3xl font-bold text-center text-white mb-4">
             Peu importe votre contexte, on a le template qu'il vous faut
           </h2>
@@ -205,8 +208,10 @@ export default function LandingPage() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-20 px-6 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto">
+      <section className="relative py-20 px-6">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-slate-900/70"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
           <h2 className="text-3xl font-bold text-center text-white mb-4">
             Cas d'usage concrets
           </h2>
@@ -279,8 +284,10 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative py-20 px-6">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-delva-purple-dark/80"></div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 p-12 rounded-3xl border border-blue-500/30">
             <h2 className="text-4xl font-bold text-white mb-4">
               Plus jamais de business case rejeté
@@ -304,8 +311,10 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 border-t border-slate-800">
-        <div className="max-w-6xl mx-auto">
+      <footer className="relative py-12 px-6 border-t border-slate-800">
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-slate-900/80"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">
