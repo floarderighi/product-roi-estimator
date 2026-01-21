@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/Button';
+import { ContactSection } from '@/components/ui/ContactSection';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -39,11 +40,19 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
         {/* Dark Overlay */}
-        <div className="absolute inset-0 z-0 bg-delva-purple-dark/80"></div>
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: 'url(/background.png)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        ></div>
         <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 rounded-full text-white text-sm font-semibold mb-8 border border-white/20 backdrop-blur-sm">
             <span>⚡</span>
-            Business case en 3 minutes chrono
+            Business case en 5 minutes chrono
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -67,7 +76,7 @@ export default function LandingPage() {
             <Link href="/estimator">
               <Button
                 size="lg"
-                className="text-lg"
+                className="text-lg bg-white text-gray-900 hover:bg-gray-50"
               >
                 Créer mon business case →
               </Button>
@@ -138,7 +147,15 @@ export default function LandingPage() {
       {/* Templates Section */}
       <section className="relative py-20 px-6">
         {/* Dark Overlay */}
-        <div className="absolute inset-0 z-0 bg-delva-purple-dark/85"></div>
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: 'url(/background.png)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        ></div>
         <div className="max-w-6xl mx-auto relative z-10">
           <h2 className="text-3xl font-bold text-center text-white mb-4">
             Peu importe votre contexte, on a le template qu'il vous faut
@@ -148,56 +165,56 @@ export default function LandingPage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="group bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-blue-500/50 hover:bg-slate-800 transition-all cursor-pointer">
+            <div className="group bg-white p-6 rounded-xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all cursor-pointer">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                   <span className="text-2xl">📈</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">SaaS (MRR/ARR)</h3>
-                  <p className="text-slate-400 text-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">SaaS (MRR/ARR)</h3>
+                  <p className="text-gray-600 text-sm">
                     Réduire le churn, améliorer la rétention, augmenter l'ARPA
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="group bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-purple-500/50 hover:bg-slate-800 transition-all cursor-pointer">
+            <div className="group bg-white p-6 rounded-xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all cursor-pointer">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                   <span className="text-2xl">🛒</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">E-commerce</h3>
-                  <p className="text-slate-400 text-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">E-commerce</h3>
+                  <p className="text-gray-600 text-sm">
                     Améliorer le taux de conversion, augmenter l'AOV
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="group bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-green-500/50 hover:bg-slate-800 transition-all cursor-pointer">
+            <div className="group bg-white p-6 rounded-xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all cursor-pointer">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                   <span className="text-2xl">🤝</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">B2B Sales-led</h3>
-                  <p className="text-slate-400 text-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">B2B Sales-led</h3>
+                  <p className="text-gray-600 text-sm">
                     Améliorer le win rate, optimiser le pipeline
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="group bg-slate-800/50 p-6 rounded-xl border border-slate-700 hover:border-yellow-500/50 hover:bg-slate-800 transition-all cursor-pointer">
+            <div className="group bg-white p-6 rounded-xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all cursor-pointer">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                   <span className="text-2xl">🤖</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Réduction de Coûts</h3>
-                  <p className="text-slate-400 text-sm">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Réduction de Coûts</h3>
+                  <p className="text-gray-600 text-sm">
                     Automatisation, productivité, gains d'efficacité
                   </p>
                 </div>
@@ -208,74 +225,73 @@ export default function LandingPage() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="relative py-20 px-6">
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 z-0 bg-slate-900/70"></div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <h2 className="text-3xl font-bold text-center text-white mb-4">
+      <section className="relative py-20 px-6" style={{ backgroundColor: '#efede6' }}>
+        {/* Background removed - using solid color instead */}
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-4">
             Cas d'usage concrets
           </h2>
-          <p className="text-center text-slate-400 mb-12 max-w-3xl mx-auto">
+          <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
             Nos utilisateurs créent des business cases pour défendre leurs initiatives auprès de leurs sponsors
           </p>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-2xl border border-slate-700">
+            <div className="bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
                   <span className="text-xl">💼</span>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Arbitrage de roadmap</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Arbitrage de roadmap</h3>
               </div>
-              <p className="text-slate-400 mb-3">
+              <p className="text-gray-600 mb-3">
                 "J'ai 3 initiatives sur la table. Laquelle prioriser ?"
               </p>
-              <p className="text-sm text-blue-300">
+              <p className="text-sm text-primary-600 font-medium">
                 → Comparez les 3 business cases côte à côte : profit, payback, niveau de confiance. Décision éclairée en 10 minutes.
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-2xl border border-slate-700">
+            <div className="bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
                   <span className="text-xl">📊</span>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Défendre un budget</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Défendre un budget</h3>
               </div>
-              <p className="text-slate-400 mb-3">
+              <p className="text-gray-600 mb-3">
                 "Le CFO veut des chiffres, pas des 'on pense que'"
               </p>
-              <p className="text-sm text-purple-300">
+              <p className="text-sm text-primary-600 font-medium">
                 → Présentez profit incrémental, payback en X mois, ROI à 24 mois. Langage finance = validation rapide.
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-2xl border border-slate-700">
+            <div className="bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-pink-500/20 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
                   <span className="text-xl">🎯</span>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Aligner les stakeholders</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Aligner les stakeholders</h3>
               </div>
-              <p className="text-slate-400 mb-3">
+              <p className="text-gray-600 mb-3">
                 "Les PM voient l'impact user, les sponsors veulent du €"
               </p>
-              <p className="text-sm text-pink-300">
+              <p className="text-sm text-primary-600 font-medium">
                 → Un seul doc avec bridge métrique produit → P&L. Tout le monde parle le même langage.
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-2xl border border-slate-700">
+            <div className="bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-primary-500 hover:shadow-delva-lg transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center">
                   <span className="text-xl">⚖️</span>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Gérer l'incertitude</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Gérer l'incertitude</h3>
               </div>
-              <p className="text-slate-400 mb-3">
+              <p className="text-gray-600 mb-3">
                 "On n'a pas de données, que des hypothèses"
               </p>
-              <p className="text-sm text-green-300">
+              <p className="text-sm text-primary-600 font-medium">
                 → Score de confiance + 3 scénarios = vous montrez que vous gérez le risque au lieu de le cacher.
               </p>
             </div>
@@ -286,7 +302,15 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="relative py-20 px-6">
         {/* Dark Overlay */}
-        <div className="absolute inset-0 z-0 bg-delva-purple-dark/80"></div>
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: 'url(/background.png)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        ></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 p-12 rounded-3xl border border-blue-500/30">
             <h2 className="text-4xl font-bold text-white mb-4">
@@ -298,36 +322,24 @@ export default function LandingPage() {
             <Link href="/estimator">
               <Button
                 size="lg"
-                className="text-lg px-10 py-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-2xl shadow-blue-500/50 transform hover:scale-105 transition-all"
+                className="text-lg px-10 py-6 bg-white text-gray-900 hover:bg-gray-50 shadow-2xl transform hover:scale-105 transition-all"
               >
                 Commencer Maintenant →
               </Button>
             </Link>
-            <p className="text-sm text-slate-500 mt-6">
+            <p className="text-base text-white mt-6 font-medium">
               Aucune inscription requise • Gratuit • Export prêt
             </p>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative py-12 px-6 border-t border-slate-800">
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 z-0 bg-slate-900/80"></div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">
-                D
-              </div>
-              <span className="text-lg font-bold text-white">DELVA ROI Estimator</span>
-            </div>
-            <div className="text-sm text-slate-400">
-              © 2026 Delva. Stop shipping guesses, start landing profit.
-            </div>
-          </div>
+      {/* À propos de Delva Section */}
+      <section className="py-20 px-6 bg-delva-beige">
+        <div className="max-w-6xl mx-auto">
+          <ContactSection />
         </div>
-      </footer>
+      </section>
     </div>
   );
 }

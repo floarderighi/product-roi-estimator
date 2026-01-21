@@ -1,7 +1,47 @@
+'use client';
+
 import { Button } from './Button';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 export function ContactSection() {
+  useEffect(() => {
+    // Cal.com embed script
+    (function (C: any, A: string, L: string) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    (window as any).Cal("init", "30min", { origin: "https://app.cal.com" });
+    (window as any).Cal.ns["30min"]("ui", {
+      "cssVarsPerTheme": { "light": { "cal-brand": "#7b00ff" } },
+      "hideEventTypeDetails": false,
+      "layout": "month_view"
+    });
+  }, []);
+
   const founders = [
     {
       name: 'Jérôme Granon',
@@ -23,20 +63,14 @@ export function ContactSection() {
     <section className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-8 md:p-12 border border-purple-100">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-purple-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
+          <div className="inline-flex items-center justify-center mb-4">
+            <Image
+              src="/logo.svg"
+              alt="Delva"
+              width={160}
+              height={53}
+              className="h-12 w-auto"
+            />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
             Besoin d'accompagnement ?
@@ -108,7 +142,7 @@ export function ContactSection() {
             </div>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
-            <div className="text-purple-600 font-semibold mb-1">Delivery & Metrics</div>
+            <div className="text-purple-600 font-semibold mb-1">Delivery & Growth</div>
             <div className="text-sm text-gray-600">
               Optimisation des processus et mesure d'impact
             </div>
@@ -116,16 +150,15 @@ export function ContactSection() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="https://www.delva.co/contacter-delva"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block"
+          <Button
+            variant="primary"
+            size="lg"
+            data-cal-link="florian-delva/30min"
+            data-cal-namespace="30min"
+            data-cal-config='{"layout":"month_view"}'
           >
-            <Button variant="primary" size="lg">
-              Prendre rendez-vous
-            </Button>
-          </a>
+            Prendre rendez-vous
+          </Button>
           <a
             href="https://www.delva.co/"
             target="_blank"
