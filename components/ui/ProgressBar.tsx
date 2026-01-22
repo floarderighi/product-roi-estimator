@@ -7,13 +7,13 @@ interface ProgressBarProps {
 
 export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
   return (
-    <div className="w-full mb-10">
+    <div className="w-full mb-6">
       <div className="flex items-center justify-between">
         {steps.map((step, index) => (
           <React.Fragment key={index}>
             <div className="flex flex-col items-center relative">
               <div
-                className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-base transition-all duration-200 ${
+                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-200 ${
                   index === currentStep
                     ? 'bg-gradient-to-br from-primary-500 to-purple-600 text-white shadow-md scale-105'
                     : index < currentStep
@@ -22,13 +22,13 @@ export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
                 }`}
               >
                 {index < currentStep ? (
-                  <span className="text-lg">✓</span>
+                  <span className="text-base">✓</span>
                 ) : (
                   index + 1
                 )}
               </div>
               <span
-                className={`mt-2 text-xs font-medium transition-all duration-200 ${
+                className={`mt-1.5 text-xs font-medium transition-all duration-200 ${
                   index === currentStep
                     ? 'text-primary-600'
                     : index < currentStep
@@ -41,7 +41,7 @@ export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
 
               {/* Indicator dot for current step */}
               {index === currentStep && (
-                <div className="absolute -bottom-1.5 w-1.5 h-1.5 rounded-full bg-primary-600"></div>
+                <div className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary-600"></div>
               )}
             </div>
             {index < steps.length - 1 && (

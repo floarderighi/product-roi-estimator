@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Celebration } from '@/components/ui/Celebration';
 import { ContactSection } from '@/components/ui/ContactSection';
 import { getEncouragingMessage } from '@/lib/encouragingMessages';
+import { showToast } from '@/components/ui/Toast';
 import {
   LineChart,
   Line,
@@ -85,7 +86,7 @@ Généré avec Delva ROI Estimator
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generateSummary());
-    alert('Résumé copié dans le presse-papier !');
+    showToast('Résumé copié dans le presse-papier !', 'success');
   };
 
   const handleEdit = () => {
@@ -425,49 +426,7 @@ Généré avec Delva ROI Estimator
         </Card>
       </section>
 
-      {/* 8. CONDITIONS DE RÉUSSITE */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <span>⚠️</span> Conditions de Réussite
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Hypothèses Critiques */}
-          {result.insights.criticalAssumptions.length > 0 && (
-            <Card className="border-l-4 border-amber-500">
-              <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
-                <span>📋</span> Hypothèses Critiques
-              </h3>
-              <ul className="space-y-2">
-                {result.insights.criticalAssumptions.map((assumption, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
-                    <span className="text-amber-600 flex-shrink-0">⚠</span>
-                    <span>{assumption}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          )}
-
-          {/* Risques à Surveiller */}
-          {result.insights.dominantRisks.length > 0 && (
-            <Card className="border-l-4 border-red-500">
-              <h3 className="font-semibold mb-3 text-lg flex items-center gap-2">
-                <span>🚨</span> Risques à Surveiller
-              </h3>
-              <ul className="space-y-2">
-                {result.insights.dominantRisks.map((risk, i) => (
-                  <li key={i} className="text-sm text-gray-700 flex items-start gap-2 p-3 bg-red-50 rounded-lg border border-red-200">
-                    <span className="text-red-600 flex-shrink-0">!</span>
-                    <span>{risk}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          )}
-        </div>
-      </section>
-
-      {/* 9. RECOMMANDATIONS */}
+      {/* 8. RECOMMANDATIONS */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>💡</span> Recommandations
@@ -499,7 +458,7 @@ Généré avec Delva ROI Estimator
         </Card>
       </section>
 
-      {/* 10. MÉTRIQUES CLÉS À SUIVRE */}
+      {/* 9. MÉTRIQUES CLÉS À SUIVRE */}
       <section className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>📊</span> Top 3 Métriques à Suivre
@@ -525,7 +484,7 @@ Généré avec Delva ROI Estimator
         </Card>
       </section>
 
-      {/* 11. MÉTHODOLOGIE DE CALCUL */}
+      {/* 10. MÉTHODOLOGIE DE CALCUL */}
       <section className="mb-8">
         <details className="group">
           <summary className="cursor-pointer list-none">
@@ -789,36 +748,46 @@ Généré avec Delva ROI Estimator
         <ContactSection />
       </section>
 
-      {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6 border-t-2 border-gray-200">
-        <Button onClick={copyToClipboard} className="w-full sm:w-auto whitespace-nowrap">
-          📋 Copier le Résumé
-        </Button>
-        <Button variant="outline" onClick={onShare} className="w-full sm:w-auto whitespace-nowrap">
-          🔗 Partager le Rapport
-        </Button>
-        <Button
-          variant="outline"
-          onClick={onExport}
-          className="w-full sm:w-auto whitespace-nowrap"
-          data-export-button
-        >
-          📥 Exporter PDF
-        </Button>
-        <Button
-          variant="outline"
-          onClick={handleEdit}
-          className="w-full sm:w-auto whitespace-nowrap"
-        >
-          ✏️ Modifier les Paramètres
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => window.location.href = '/estimator'}
-          className="w-full sm:w-auto whitespace-nowrap"
-        >
-          ✨ Nouvelle Initiative
-        </Button>
+      {/* Spacer pour éviter que le contenu soit caché par la barre fixe */}
+      <div className="h-20"></div>
+
+      {/* Actions - Barre fixe en bas */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t-2 border-gray-200 shadow-2xl z-50">
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex flex-wrap gap-2 justify-center items-center">
+            <Button onClick={copyToClipboard} size="sm" className="whitespace-nowrap flex-shrink-0 text-sm">
+              📋 Copier le Résumé
+            </Button>
+            <Button variant="outline" onClick={onShare} size="sm" className="whitespace-nowrap flex-shrink-0 text-sm">
+              🔗 Partager le Rapport
+            </Button>
+            <Button
+              variant="outline"
+              onClick={onExport}
+              size="sm"
+              className="whitespace-nowrap flex-shrink-0 text-sm"
+              data-export-button
+            >
+              📊 Exporter PowerPoint
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleEdit}
+              size="sm"
+              className="whitespace-nowrap flex-shrink-0 text-sm"
+            >
+              ✏️ Modifier les Paramètres
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/estimator'}
+              size="sm"
+              className="whitespace-nowrap flex-shrink-0 text-sm"
+            >
+              ✨ Nouvelle Initiative
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -50,6 +50,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   const [riskSubStep, setRiskSubStep] = useState(0); // For guided risk assessment
   const [confidenceSubStep, setConfidenceSubStep] = useState(0); // For guided confidence assessment
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isExampleActive, setIsExampleActive] = useState(false);
 
   const [risks, setRisks] = useState<RiskInputs>({
     marketRisk: 3,
@@ -85,6 +86,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           setConfidenceSubStep(parsed.confidenceSubStep || 0);
           setRisks(parsed.risks || { marketRisk: 3, technicalRisk: 3, timeToMarketRisk: 3 });
           setConfidence(parsed.confidence || { dataQuality: 'partial', dependencies: '1-2', upliftNature: 'analogy' });
+          setIsExampleActive(parsed.isExampleActive || false);
         } catch (e) {
           console.error('Failed to load saved form data:', e);
         }
@@ -112,10 +114,11 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
         confidenceSubStep,
         risks,
         confidence,
+        isExampleActive,
       };
       localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formData));
     }
-  }, [isLoaded, step, selectedModel, projectName, templateInputs, deliveryCost, squad, runCost, rampUp, horizon, isExpertMode, costSubStep, riskSubStep, confidenceSubStep, risks, confidence]);
+  }, [isLoaded, step, selectedModel, projectName, templateInputs, deliveryCost, squad, runCost, rampUp, horizon, isExpertMode, costSubStep, riskSubStep, confidenceSubStep, risks, confidence, isExampleActive]);
 
   const steps = ['Template', 'Métriques', 'Coûts', 'Risques', 'Confiance'];
 
@@ -182,34 +185,47 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
     }
   };
 
-  const handleLoadExample = () => {
+  const handleToggleExample = () => {
     if (!selectedModel) return;
 
-    const example = getExample(selectedModel);
+    if (isExampleActive) {
+      // Désactiver l'exemple : vider toutes les valeurs
+      setProjectName('');
+      setTemplateInputs({});
+      setDeliveryCost({ people: 2, timeMonths: 3, monthlyCost: 8000 });
+      setSquad(null);
+      setRunCost(500);
+      setRampUp('3-months');
+      setHorizon(24);
+      setRisks({ marketRisk: 3, technicalRisk: 3, timeToMarketRisk: 3 });
+      setConfidence({ dataQuality: 'partial', dependencies: '1-2', upliftNature: 'analogy' });
+      setIsExampleActive(false);
+    } else {
+      // Activer l'exemple : remplir avec les valeurs
+      const example = getExample(selectedModel);
 
-    // Remplir le nom du projet
-    setProjectName(example.name);
+      setProjectName(example.name);
+      setTemplateInputs(example.metrics);
+      setDeliveryCost({
+        people: 2,
+        timeMonths: 3,
+        monthlyCost: example.costs.deliveryCost / 6,
+      });
+      setRunCost(example.costs.runCost);
+      setRampUp(example.rampUp);
+      setHorizon(example.horizon);
+      setRisks(example.risks);
+      setConfidence(example.confidence);
+      setIsExampleActive(true);
 
-    // Remplir les métriques
-    setTemplateInputs(example.metrics);
-
-    // Remplir les coûts
-    setDeliveryCost({
-      people: 2,
-      timeMonths: 3,
-      monthlyCost: example.costs.deliveryCost / 6, // Approximation
-    });
-    setRunCost(example.costs.runCost);
-
-    // Remplir ramp-up et horizon
-    setRampUp(example.rampUp);
-    setHorizon(example.horizon);
-
-    // Remplir les risques
-    setRisks(example.risks);
-
-    // Remplir la confiance
-    setConfidence(example.confidence);
+      // Scroll vers le champ "Nom du Projet"
+      setTimeout(() => {
+        const projectNameInput = document.querySelector('input[placeholder*="Refonte"]');
+        if (projectNameInput) {
+          projectNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   };
 
   const handleSubmit = () => {
@@ -303,23 +319,23 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4 pb-6">
       <ProgressBar steps={steps} currentStep={step} />
 
       {step === 0 && (
         <div className="animate-fade-in">
-          <h2 className="text-3xl font-bold mb-3 text-center bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold mb-2 text-center bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
             🎯 Choisissez Votre Modèle Business
           </h2>
-          <p className="text-gray-600 mb-8 text-center text-lg">Sélectionnez le template qui correspond le mieux à votre initiative</p>
+          <p className="text-gray-600 mb-5 text-center">Sélectionnez le template qui correspond le mieux à votre initiative</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {templates.map((template) => {
               return (
                 <div
                   key={template.id}
                   onClick={() => setSelectedModel(template.id)}
-                  className={`relative cursor-pointer rounded-xl p-6 transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.99] ${
+                  className={`relative cursor-pointer rounded-xl p-4 transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.99] ${
                     selectedModel === template.id
                       ? 'bg-gradient-to-br from-primary-50 to-purple-50 ring-2 ring-primary-500 shadow-lg'
                       : 'bg-white shadow-sm hover:shadow-md'
@@ -329,16 +345,16 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                 >
                   {/* Checkmark when selected */}
                   {selectedModel === template.id && (
-                    <div className="absolute top-3 right-3 w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center shadow-sm animate-scale-in">
-                      <span className="text-white text-sm">✓</span>
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary-600 rounded-full flex items-center justify-center shadow-sm animate-scale-in">
+                      <span className="text-white text-xs">✓</span>
                     </div>
                   )}
 
                   <div className="flex items-start gap-3">
-                    <div className="text-4xl flex-shrink-0 mt-0.5">{template.name.split(' ')[0]}</div>
+                    <div className="text-3xl flex-shrink-0 mt-0.5">{template.name.split(' ')[0]}</div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold mb-2 text-gray-900">{template.name.substring(template.name.indexOf(' ') + 1)}</h3>
-                      <p className="text-sm text-gray-600 leading-relaxed">{template.description}</p>
+                      <h3 className="text-base font-bold mb-1 text-gray-900">{template.name.substring(template.name.indexOf(' ') + 1)}</h3>
+                      <p className="text-xs text-gray-600 leading-relaxed">{template.description}</p>
                     </div>
                   </div>
                 </div>
@@ -347,25 +363,29 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           </div>
 
           {selectedModel && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-800 mb-1">✨ Envie de tester rapidement ?</p>
+            <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-800">✨ Envie de tester rapidement ?</p>
                   <p className="text-xs text-gray-600">Pré-remplissez le formulaire avec un exemple réaliste</p>
                 </div>
                 <Button
-                  variant="secondary"
+                  variant={isExampleActive ? "primary" : "secondary"}
                   size="sm"
-                  onClick={handleLoadExample}
-                  className="ml-4 whitespace-nowrap"
+                  onClick={handleToggleExample}
+                  className={`whitespace-nowrap flex-shrink-0 transition-all ${
+                    isExampleActive
+                      ? 'shadow-md ring-2 ring-primary-300'
+                      : ''
+                  }`}
                 >
-                  🚀 Essayer avec un exemple
+                  {isExampleActive ? '✓ Exemple actif' : '🚀 Essayer avec un exemple'}
                 </Button>
               </div>
             </div>
           )}
 
-          <div className="mb-6">
+          <div className="mb-4">
             <Input
               label="Nom du Projet (optionnel)"
               placeholder="ex: Refonte du parcours d'onboarding"
@@ -378,15 +398,15 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
 
       {step === 1 && selectedModel && (
         <div className="animate-fade-in">
-          <h2 className="text-2xl font-bold mb-2">📊 Métriques Business</h2>
-          <p className="text-gray-600 mb-6">Entrez vos métriques actuelles et les améliorations attendues</p>
+          <h2 className="text-xl font-bold mb-1.5">📊 Métriques Business</h2>
+          <p className="text-gray-600 mb-4 text-sm">Entrez vos métriques actuelles et les améliorations attendues</p>
 
           {/* Mode Toggle */}
-          <div className="mb-6">
+          <div className="mb-4">
             <ModeToggle isExpertMode={isExpertMode} onChange={setIsExpertMode} />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {getTemplate(selectedModel).inputs.map((input) => {
               // In simple mode, only show required fields
               if (!isExpertMode && !isRequiredInSimpleMode(selectedModel, input.id)) {
@@ -462,16 +482,16 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
       {step === 2 && (
         <div className="animate-fade-in">
           {/* Progress indicator for cost questions */}
-          <div className="flex items-center justify-center gap-2 mb-8">
+          <div className="flex items-center justify-center gap-2 mb-5">
             {[0, 1].map((index) => (
               <div
                 key={index}
-                className={`h-2 rounded-full transition-all ${
+                className={`h-1.5 rounded-full transition-all ${
                   index === costSubStep
                     ? 'w-8 bg-primary-600'
                     : index < costSubStep
-                    ? 'w-2 bg-primary-400'
-                    : 'w-2 bg-gray-300'
+                    ? 'w-1.5 bg-primary-400'
+                    : 'w-1.5 bg-gray-300'
                 }`}
               />
             ))}
@@ -480,10 +500,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Sub-step 1: Squad and Delivery Cost */}
           {costSubStep === 0 && (
             <div>
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 👥 Composition de l'équipe
               </h2>
-              <p className="text-gray-600 mb-6 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Définissez votre équipe projet et la durée du développement
               </p>
 
@@ -504,7 +524,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Sub-step 2: Run Costs and Timeline */}
           {costSubStep === 1 && (
             <div>
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 💳 Coûts récurrents & Horizon
               </h2>
               <p className="text-gray-600 mb-6 text-center text-lg">
@@ -581,10 +601,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 1: Market Risk */}
           {riskSubStep === 0 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 🎯 Quel est le risque que les utilisateurs n'adoptent pas la fonctionnalité ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Considérez l'appétence des utilisateurs, la concurrence et le timing
               </p>
 
@@ -601,10 +621,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 2: Technical Risk */}
           {riskSubStep === 1 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 ⚙️ Quelle est la complexité technique ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Difficulté d'implémentation, dette technique, dépendances
               </p>
 
@@ -621,10 +641,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 3: Time-to-Market Risk */}
           {riskSubStep === 2 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 ⏱️ Quel est le risque de retard ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Dérive du scope, disponibilité des ressources, blocages
               </p>
 
@@ -661,10 +681,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 1: Data Quality */}
           {confidenceSubStep === 0 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 📊 Quelle est la qualité de vos données ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Vos métriques sont-elles mesurées ou estimées ?
               </p>
 
@@ -705,10 +725,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 2: Dependencies */}
           {confidenceSubStep === 1 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 🔗 Combien de dépendances avez-vous ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Équipes, systèmes externes ou projets nécessaires
               </p>
 
@@ -752,10 +772,10 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
           {/* Question 3: Uplift Nature */}
           {confidenceSubStep === 2 && (
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold mb-3 text-center">
+              <h2 className="text-2xl font-bold mb-2 text-center">
                 🔬 Sur quoi repose votre estimation d'amélioration ?
               </h2>
-              <p className="text-gray-600 mb-8 text-center text-lg">
+              <p className="text-gray-600 mb-4 text-center text-sm">
                 Avez-vous des preuves ou est-ce une hypothèse ?
               </p>
 
@@ -795,7 +815,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
         </div>
       )}
 
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between mt-5">
         <Button variant="outline" onClick={handleBack} disabled={step === 0}>
           Retour
         </Button>

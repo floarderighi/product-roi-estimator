@@ -161,7 +161,7 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
               >
                 <span className="text-2xl">{config.emoji}</span>
                 <div className="flex items-center gap-1 flex-shrink-0 min-w-[120px]">
-                  <span className="font-medium text-sm">{config.label}</span>
+                  <span className="font-medium text-sm text-gray-900">{config.label}</span>
                   <InfoTooltip
                     term={config.label}
                     definition=""
@@ -244,7 +244,7 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
                 <select
                   value={member.level}
                   onChange={(e) => updateMemberLevel(member.id, e.target.value as 'junior' | 'confirmed' | 'senior')}
-                  className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
+                  className="px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
                 >
                   <option value="junior">Junior</option>
                   <option value="confirmed">Confirmé</option>
@@ -255,10 +255,10 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
                   type="number"
                   value={member.monthlyCost || 0}
                   onChange={(e) => updateMemberCost(member.id, Number(e.target.value) || 0)}
-                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   min={0}
                 />
-                <span className="text-sm text-gray-600 flex-shrink-0">€/mois</span>
+                <span className="text-sm text-gray-700 flex-shrink-0">€/mois</span>
                 <button
                   onClick={() => removeMember(member.id)}
                   className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { CalculationResult } from '@/types';
 import { ResultsDashboard } from '@/components/results/ResultsDashboard';
+import { showToast } from '@/components/ui/Toast';
 
 export default function ReportPage() {
   const params = useParams();
@@ -44,7 +45,7 @@ export default function ReportPage() {
   const handleShare = () => {
     const shareUrl = window.location.href;
     navigator.clipboard.writeText(shareUrl);
-    alert(`Lien de partage copié : ${shareUrl}`);
+    showToast('Lien de partage copié !', 'success');
   };
 
   const handleExport = () => {
