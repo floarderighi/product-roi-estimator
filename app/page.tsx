@@ -83,8 +83,8 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <p className="text-sm text-gray-300">
-            Utilisé par <span className="text-white font-bold">25+ Product Leaders</span> pour prioriser et sécuriser leurs budgets
+          <p className="text-base text-gray-200 font-medium">
+            Utilisé par <span className="text-white font-bold text-lg">300+ Product Leaders</span> pour prioriser et sécuriser leurs budgets
           </p>
         </div>
       </section>
