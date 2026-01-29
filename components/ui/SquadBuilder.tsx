@@ -117,13 +117,13 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
   const totalCost = squad.reduce((sum, m) => sum + m.monthlyCost, 0) * timeMonths;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Squad Section */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <h3 className="text-lg font-semibold text-gray-800">
-              👥 Composez votre Squad
+      <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center gap-1">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800">
+              👥 Squad
             </h3>
             <InfoTooltip
               term="Coût employeur"
@@ -145,186 +145,99 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
               </div>
             </InfoTooltip>
           </div>
-          <span className="text-sm text-gray-500">
-            {squad.length} {squad.length > 1 ? 'personnes' : 'personne'}
+          <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+            {squad.length} pers.
           </span>
         </div>
 
-        {/* Squad Members - Table Style */}
-        <div className="space-y-2 mb-4">
+        {/* Squad Members - Compact Mobile Design */}
+        <div className="space-y-2 mb-3 sm:mb-4">
           {squad.map((member) => {
             const config = roleConfig[member.role];
             return (
               <div
                 key={member.id}
-                className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2 p-2 sm:p-3 bg-gray-50 rounded-lg"
               >
-                {/* Mobile: Stack layout / Desktop: Flex row */}
-                <div className="flex items-center gap-2 mb-2 sm:mb-0">
-                  <span className="text-2xl">{config.emoji}</span>
-                  <div className="flex items-center gap-1 flex-1 min-w-0">
-                    <span className="font-medium text-sm text-gray-900 truncate">{config.label}</span>
-                    <InfoTooltip
-                      term={config.label}
-                      definition=""
-                    >
-                      <div className="space-y-3">
-                        {/* Header */}
-                        <p className="text-xs text-gray-600">
-                          Coûts moyens France 2025 (charges patronales ~43%)
-                        </p>
-
-                        {/* Junior */}
-                        <div className="p-2.5 bg-blue-50 rounded-md border border-blue-100">
-                          <p className="text-xs font-bold text-blue-900 mb-1.5">📊 Junior</p>
-                          <p className="text-xs text-blue-800 leading-relaxed">
-                            <span className="font-semibold">Salaire brut :</span>{' '}
-                            {Math.round(config.salaryData.junior.grossAnnual / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-blue-600">({config.salaryData.junior.grossAnnual.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                          <p className="text-xs text-blue-800 leading-relaxed">
-                            <span className="font-semibold">Coût total employeur :</span>{' '}
-                            {Math.round(config.salaryData.junior.totalCost / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-blue-600">({config.salaryData.junior.totalCost.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                        </div>
-
-                        {/* Confirmé */}
-                        <div className="p-2.5 bg-indigo-50 rounded-md border border-indigo-100">
-                          <p className="text-xs font-bold text-indigo-900 mb-1.5">📊 Confirmé</p>
-                          <p className="text-xs text-indigo-800 leading-relaxed">
-                            <span className="font-semibold">Salaire brut :</span>{' '}
-                            {Math.round(config.salaryData.confirmed.grossAnnual / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-indigo-600">({config.salaryData.confirmed.grossAnnual.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                          <p className="text-xs text-indigo-800 leading-relaxed">
-                            <span className="font-semibold">Coût total employeur :</span>{' '}
-                            {Math.round(config.salaryData.confirmed.totalCost / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-indigo-600">({config.salaryData.confirmed.totalCost.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                        </div>
-
-                        {/* Senior */}
-                        <div className="p-2.5 bg-purple-50 rounded-md border border-purple-100">
-                          <p className="text-xs font-bold text-purple-900 mb-1.5">📊 Senior</p>
-                          <p className="text-xs text-purple-800 leading-relaxed">
-                            <span className="font-semibold">Salaire brut :</span>{' '}
-                            {Math.round(config.salaryData.senior.grossAnnual / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-purple-600">({config.salaryData.senior.grossAnnual.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                          <p className="text-xs text-purple-800 leading-relaxed">
-                            <span className="font-semibold">Coût total employeur :</span>{' '}
-                            {Math.round(config.salaryData.senior.totalCost / 12).toLocaleString('fr-FR')}€/mois{' '}
-                            <span className="text-purple-600">({config.salaryData.senior.totalCost.toLocaleString('fr-FR')}€/an)</span>
-                          </p>
-                        </div>
-
-                        {/* Sources */}
-                        {config.sources.length > 0 && (
-                          <div className="pt-2 border-t border-gray-200">
-                            <p className="text-xs font-semibold text-gray-700 mb-2">📚 Sources :</p>
-                            <div className="space-y-1">
-                              {config.sources.map((source, idx) => (
-                                <a
-                                  key={idx}
-                                  href={source.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="block text-xs text-indigo-600 hover:text-indigo-800 hover:underline"
-                                >
-                                  {source.title} →
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </InfoTooltip>
-                  </div>
-                  <button
-                    onClick={() => removeMember(member.id)}
-                    className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 sm:hidden"
-                    aria-label="Retirer"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                {/* Emoji + Role name (compact) */}
+                <div className="flex items-center gap-1.5 min-w-0 w-24 sm:w-32 flex-shrink-0">
+                  <span className="text-lg sm:text-xl">{config.emoji}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-900 truncate">{config.label.split(' ')[0]}</span>
                 </div>
 
-                {/* Controls row */}
-                <div className="flex items-center gap-2 sm:gap-3 pl-0 sm:pl-10">
-                  {/* Level selector */}
-                  <select
-                    value={member.level}
-                    onChange={(e) => updateMemberLevel(member.id, e.target.value as 'junior' | 'confirmed' | 'senior')}
-                    className="px-2 sm:px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
-                  >
-                    <option value="junior">Junior</option>
-                    <option value="confirmed">Confirmé</option>
-                    <option value="senior">Senior</option>
-                  </select>
+                {/* Level selector (compact) */}
+                <select
+                  value={member.level}
+                  onChange={(e) => updateMemberLevel(member.id, e.target.value as 'junior' | 'confirmed' | 'senior')}
+                  className="w-20 sm:w-24 px-1.5 sm:px-2 py-1.5 text-xs sm:text-sm text-gray-900 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 bg-white"
+                >
+                  <option value="junior">Jr</option>
+                  <option value="confirmed">Conf.</option>
+                  <option value="senior">Sr</option>
+                </select>
 
-                  <div className="flex items-center gap-1 flex-1 min-w-0">
-                    <input
-                      type="number"
-                      value={member.monthlyCost || 0}
-                      onChange={(e) => updateMemberCost(member.id, Number(e.target.value) || 0)}
-                      className="w-full min-w-0 px-2 sm:px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      min={0}
-                    />
-                    <span className="text-sm text-gray-700 flex-shrink-0">€/mois</span>
-                  </div>
-                  <button
-                    onClick={() => removeMember(member.id)}
-                    className="hidden sm:block text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
-                    aria-label="Retirer"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
+                {/* Cost input (compact) */}
+                <div className="flex items-center gap-0.5 flex-1 min-w-0">
+                  <input
+                    type="number"
+                    value={member.monthlyCost || 0}
+                    onChange={(e) => updateMemberCost(member.id, Number(e.target.value) || 0)}
+                    className="w-full min-w-0 px-1.5 sm:px-2 py-1.5 text-xs sm:text-sm text-gray-900 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 text-right"
+                    min={0}
+                  />
+                  <span className="text-xs text-gray-500 flex-shrink-0">€</span>
                 </div>
+
+                {/* Remove button */}
+                <button
+                  onClick={() => removeMember(member.id)}
+                  className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 p-1"
+                  aria-label="Retirer"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             );
           })}
         </div>
 
-        {/* Add Member Buttons - Simplified */}
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+        {/* Add Member Buttons - Compact grid */}
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
           {(Object.keys(roleConfig) as Array<keyof typeof roleConfig>).map((role) => {
             const config = roleConfig[role];
             return (
               <button
                 key={role}
                 onClick={() => addMember(role)}
-                className="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 px-2 sm:px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs sm:text-sm font-medium hover:bg-gray-50 hover:border-indigo-500 transition-all"
+                className="flex flex-col items-center justify-center gap-0.5 p-2 sm:p-2.5 bg-white border border-gray-200 rounded-lg text-xs font-medium hover:bg-indigo-50 hover:border-indigo-300 transition-all"
               >
-                <span className="text-base sm:text-lg">{config.emoji}</span>
-                <span className="truncate">+ {config.label}</span>
+                <span className="text-lg sm:text-xl">{config.emoji}</span>
+                <span className="text-[10px] sm:text-xs text-gray-600">+Ajouter</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Duration Section - Separated */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
-            ⏱️ Durée du projet
+      {/* Duration Section - Compact */}
+      <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800">
+            ⏱️ Durée
           </h3>
-          <span className="text-lg font-semibold text-indigo-600">
+          <span className="text-base sm:text-lg font-semibold text-indigo-600">
             {timeMonths} mois
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => onTimeChange(Math.max(1, timeMonths - 1))}
-            className="w-10 h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
+            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
           >
-            <span className="text-lg font-bold text-gray-600">−</span>
+            <span className="text-base sm:text-lg font-bold text-gray-600">−</span>
           </button>
           <div className="flex-1">
             <input
@@ -339,23 +252,25 @@ export function SquadBuilder({ timeMonths, onTimeChange, onSquadChange, initialS
           </div>
           <button
             onClick={() => onTimeChange(Math.min(24, timeMonths + 1))}
-            className="w-10 h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
+            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-indigo-500 transition-all"
           >
-            <span className="text-lg font-bold text-gray-600">+</span>
+            <span className="text-base sm:text-lg font-bold text-gray-600">+</span>
           </button>
         </div>
       </div>
 
-      {/* Total Cost Display */}
-      <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-200">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-gray-700">💰 Coût total de delivery</span>
-          <span className="text-3xl font-bold text-indigo-600">
-            {totalCost.toLocaleString()} €
+      {/* Total Cost Display - Compact */}
+      <div className="bg-indigo-50 rounded-xl p-3 sm:p-5 border border-indigo-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xs sm:text-sm font-medium text-gray-700">💰 Coût delivery</span>
+            <div className="text-[10px] sm:text-xs text-gray-500">
+              {squad.length} × {timeMonths}m = {(squad.length * timeMonths)} pers-mois
+            </div>
+          </div>
+          <span className="text-xl sm:text-3xl font-bold text-indigo-600">
+            {totalCost.toLocaleString()}€
           </span>
-        </div>
-        <div className="text-xs text-gray-600">
-          {squad.length} × {timeMonths} mois = {(squad.length * timeMonths)} personnes-mois
         </div>
       </div>
 
