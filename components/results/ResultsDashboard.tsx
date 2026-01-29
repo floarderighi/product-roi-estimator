@@ -121,48 +121,48 @@ Généré avec Delva ROI Estimator
   const isPositive = scenario.totalProfit > 0;
 
   return (
-    <div id="results-dashboard" className="max-w-4xl mx-auto p-6">
+    <div id="results-dashboard" className="max-w-4xl mx-auto p-4 sm:p-6">
       {/* Animation de célébration */}
       {showCelebration && shouldCelebrate && <Celebration />}
 
       {/* 1. VERDICT EXECUTIVE - Hero Section */}
-      <div className="mb-8 p-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-2 border-indigo-200 rounded-2xl animate-fade-in">
-        <div className="text-center mb-4">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+      <div className="mb-6 sm:mb-8 p-4 sm:p-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-2 border-indigo-200 rounded-xl sm:rounded-2xl animate-fade-in">
+        <div className="text-center mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">
             {result.initiative.projectName || 'Analyse ROI'}
           </h1>
-          <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${confidenceBadge.color}`}>
+          <span className={`inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold ${confidenceBadge.color}`}>
             Confiance {confidenceBadge.label} ({result.confidenceScore}/100)
           </span>
         </div>
 
-        <div className="text-center py-6">
+        <div className="text-center py-4 sm:py-6">
           {isPositive ? (
             <>
-              <div className="text-6xl font-extrabold text-green-600 mb-2">
+              <div className="text-4xl sm:text-6xl font-extrabold text-green-600 mb-2">
                 ✓ Rentable
               </div>
-              <p className="text-2xl text-gray-700">
+              <p className="text-lg sm:text-2xl text-gray-700">
                 Payback en <span className="font-bold text-indigo-600">{formatPayback(scenario.paybackMonths)}</span>
               </p>
             </>
           ) : (
             <>
-              <div className="text-6xl font-extrabold text-red-600 mb-2">
+              <div className="text-4xl sm:text-6xl font-extrabold text-red-600 mb-2">
                 ⚠ Déficitaire
               </div>
-              <p className="text-2xl text-gray-700">
+              <p className="text-lg sm:text-2xl text-gray-700">
                 Perte de <span className="font-bold text-red-600">{formatCurrency(Math.abs(scenario.totalProfit))}</span>
               </p>
             </>
           )}
         </div>
 
-        <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-indigo-200">
+        <div className="bg-white/80 backdrop-blur rounded-lg sm:rounded-xl p-3 sm:p-4 border border-indigo-200">
           <div className="text-center">
-            <div className="text-3xl mb-2">{encouragingMessage.emoji}</div>
-            <div className="text-xl font-semibold text-gray-900 mb-1">{encouragingMessage.title}</div>
-            <p className="text-sm text-gray-600">{encouragingMessage.subtitle}</p>
+            <div className="text-2xl sm:text-3xl mb-2">{encouragingMessage.emoji}</div>
+            <div className="text-base sm:text-xl font-semibold text-gray-900 mb-1">{encouragingMessage.title}</div>
+            <p className="text-xs sm:text-sm text-gray-600">{encouragingMessage.subtitle}</p>
           </div>
         </div>
       </div>
@@ -181,29 +181,29 @@ Généré avec Delva ROI Estimator
       </div>
 
       {/* 2. L'INVESTISSEMENT */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <section className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>💰</span> L&apos;Investissement
         </h2>
         <Card>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div className="text-sm text-gray-600 mb-1">Coût de Delivery</div>
-              <div className="text-2xl font-bold text-gray-900">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="text-xs sm:text-sm text-gray-600 mb-1">Coût de Delivery</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">
                 {formatCurrency(result.initiative.deliveryCost.people * result.initiative.deliveryCost.timeMonths * result.initiative.deliveryCost.monthlyCost)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Investissement initial</div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div className="text-sm text-gray-600 mb-1">Coût Run Mensuel</div>
-              <div className="text-2xl font-bold text-gray-900">
+            <div className="p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="text-xs sm:text-sm text-gray-600 mb-1">Coût Run Mensuel</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900">
                 {formatCurrency(result.initiative.runCost)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Récurrent chaque mois</div>
             </div>
-            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-              <div className="text-sm text-gray-600 mb-1">Investissement Total</div>
-              <div className="text-2xl font-bold text-indigo-600">
+            <div className="p-3 sm:p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+              <div className="text-xs sm:text-sm text-gray-600 mb-1">Investissement Total</div>
+              <div className="text-xl sm:text-2xl font-bold text-indigo-600">
                 {formatCurrency((result.initiative.deliveryCost.people * result.initiative.deliveryCost.timeMonths * result.initiative.deliveryCost.monthlyCost) + result.initiative.runCost * result.initiative.horizon)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Sur {result.initiative.horizon} mois</div>
@@ -213,64 +213,64 @@ Généré avec Delva ROI Estimator
       </section>
 
       {/* 3. LE RETOUR ATTENDU */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <section className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>📈</span> Le Retour Attendu
         </h2>
         <Card>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className={`p-4 bg-gradient-to-br rounded-lg border ${
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className={`p-3 sm:p-4 bg-gradient-to-br rounded-lg border ${
               isPositive
                 ? 'from-green-50 to-emerald-50 border-green-200'
                 : 'from-red-50 to-rose-50 border-red-200'
             }`}>
-              <div className="text-sm text-gray-600 mb-1">Profit Mensuel</div>
-              <div className={`text-2xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
+              <div className="text-xs sm:text-sm text-gray-600 mb-1">Profit Mensuel</div>
+              <div className={`text-xl sm:text-2xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
                 {formatCurrency(scenario.annualProfit / 12)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Chaque mois en année 1</div>
             </div>
-            <div className={`p-4 bg-gradient-to-br rounded-lg border ${
+            <div className={`p-3 sm:p-4 bg-gradient-to-br rounded-lg border ${
               isPositive
                 ? 'from-green-50 to-emerald-50 border-green-200'
                 : 'from-red-50 to-rose-50 border-red-200'
             }`}>
-              <div className="text-sm text-gray-600 mb-1">Profit Annuel</div>
-              <div className={`text-2xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
+              <div className="text-xs sm:text-sm text-gray-600 mb-1">Profit Annuel</div>
+              <div className={`text-xl sm:text-2xl font-bold ${isPositive ? 'text-green-700' : 'text-red-700'}`}>
                 {formatCurrency(scenario.annualProfit)}
               </div>
               <div className="text-xs text-gray-500 mt-1">Année 1 stabilisée</div>
             </div>
-            <div className={`p-4 bg-gradient-to-br rounded-lg border text-white ${
+            <div className={`p-3 sm:p-4 bg-gradient-to-br rounded-lg border text-white ${
               isPositive
                 ? 'from-green-600 to-emerald-600 border-green-700'
                 : 'from-red-600 to-rose-600 border-red-700'
             }`}>
-              <div className={`text-sm mb-1 ${isPositive ? 'text-green-100' : 'text-red-100'}`}>Profit Total</div>
-              <div className="text-2xl font-bold">
+              <div className={`text-xs sm:text-sm mb-1 ${isPositive ? 'text-green-100' : 'text-red-100'}`}>Profit Total</div>
+              <div className="text-xl sm:text-2xl font-bold">
                 {formatCurrency(scenario.totalProfit)}
               </div>
               <div className={`text-xs mt-1 ${isPositive ? 'text-green-100' : 'text-red-100'}`}>Sur {result.initiative.horizon} mois</div>
             </div>
           </div>
-          <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">ROI sur 24 mois</span>
-              <span className={`text-2xl font-bold ${isPositive ? 'text-indigo-600' : 'text-red-600'}`}>{scenario.roi24.toFixed(1)}%</span>
+              <span className="text-xs sm:text-sm text-gray-600">ROI sur 24 mois</span>
+              <span className={`text-xl sm:text-2xl font-bold ${isPositive ? 'text-indigo-600' : 'text-red-600'}`}>{scenario.roi24.toFixed(1)}%</span>
             </div>
           </div>
         </Card>
       </section>
 
       {/* 4. CASHFLOW CUMULÉ */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <section className="mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>💰</span> Cashflow Cumulé
         </h2>
         <Card>
-          <div className="w-full" style={{ minHeight: '400px' }}>
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 60, bottom: 5 }}>
+          <div className="w-full" style={{ minHeight: '300px' }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="colorCashflow" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
@@ -280,18 +280,18 @@ Généré avec Delva ROI Estimator
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                 <XAxis
                   dataKey="month"
-                  label={{ value: 'Mois', position: 'insideBottom', offset: -5 }}
                   stroke="#64748b"
+                  tick={{ fontSize: 12 }}
                 />
                 <YAxis
-                  label={{ value: 'EUR', angle: -90, position: 'insideLeft', offset: 10 }}
                   tickFormatter={(value) => new Intl.NumberFormat('fr-FR', {
                     notation: 'compact',
                     compactDisplay: 'short',
                     maximumFractionDigits: 0
                   }).format(value)}
                   stroke="#64748b"
-                  width={80}
+                  width={50}
+                  tick={{ fontSize: 11 }}
                 />
                 <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
@@ -300,17 +300,18 @@ Généré avec Delva ROI Estimator
                     backgroundColor: 'white',
                     border: '2px solid #3b82f6',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                    fontSize: '12px'
                   }}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
                 <Line
                   type="monotone"
                   dataKey="cashflow"
                   stroke="url(#colorCashflow)"
-                  strokeWidth={4}
-                  dot={{ fill: '#3b82f6', r: 5, strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 8 }}
+                  strokeWidth={3}
+                  dot={{ fill: '#3b82f6', r: 3, strokeWidth: 1, stroke: '#fff' }}
+                  activeDot={{ r: 6 }}
                   name="Cashflow Cumulé"
                 />
               </LineChart>
@@ -321,11 +322,12 @@ Généré avec Delva ROI Estimator
 
       {/* 5. COMPARAISON DES SCÉNARIOS */}
       <section className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span>📊</span> Comparaison des Scénarios
         </h2>
         <Card>
-          <div className="overflow-x-auto">
+          {/* Desktop: Table view */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -356,6 +358,60 @@ Généré avec Delva ROI Estimator
                 </tr>
               </tbody>
             </table>
+          </div>
+          {/* Mobile: Card view */}
+          <div className="sm:hidden space-y-3">
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Conservateur</div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <div className="text-xs text-gray-500">Profit/an</div>
+                  <div className="text-sm font-semibold">{formatCurrency(result.scenarios.conservative.annualProfit)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Payback</div>
+                  <div className="text-sm font-semibold">{result.scenarios.conservative.paybackMonths}m</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">ROI 24m</div>
+                  <div className="text-sm font-semibold">{result.scenarios.conservative.roi24.toFixed(0)}%</div>
+                </div>
+              </div>
+            </div>
+            <div className="p-3 bg-primary-50 rounded-lg border-2 border-primary-200">
+              <div className="text-xs font-semibold text-primary-600 uppercase mb-2">Base (recommandé)</div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <div className="text-xs text-gray-500">Profit/an</div>
+                  <div className="text-sm font-bold text-primary-700">{formatCurrency(result.scenarios.base.annualProfit)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Payback</div>
+                  <div className="text-sm font-bold text-primary-700">{result.scenarios.base.paybackMonths}m</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">ROI 24m</div>
+                  <div className="text-sm font-bold text-primary-700">{result.scenarios.base.roi24.toFixed(0)}%</div>
+                </div>
+              </div>
+            </div>
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Agressif</div>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <div className="text-xs text-gray-500">Profit/an</div>
+                  <div className="text-sm font-semibold">{formatCurrency(result.scenarios.aggressive.annualProfit)}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">Payback</div>
+                  <div className="text-sm font-semibold">{result.scenarios.aggressive.paybackMonths}m</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">ROI 24m</div>
+                  <div className="text-sm font-semibold">{result.scenarios.aggressive.roi24.toFixed(0)}%</div>
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       </section>
@@ -753,28 +809,31 @@ Généré avec Delva ROI Estimator
 
       {/* Actions - Barre fixe en bas */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t-2 border-gray-200 shadow-2xl z-50">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex flex-wrap gap-2 justify-center items-center">
-            <Button onClick={copyToClipboard} size="sm" className="whitespace-nowrap flex-shrink-0 text-sm">
-              📋 Copier le Résumé
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-2 sm:py-3">
+          <div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-1.5 sm:gap-2 justify-center items-center">
+            <Button onClick={copyToClipboard} size="sm" className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">📋 Copier le Résumé</span>
+              <span className="sm:hidden">📋 Copier</span>
             </Button>
-            <Button variant="outline" onClick={onShare} size="sm" className="whitespace-nowrap flex-shrink-0 text-sm">
-              🔗 Partager le Rapport
+            <Button variant="outline" onClick={onShare} size="sm" className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3">
+              <span className="hidden sm:inline">🔗 Partager le Rapport</span>
+              <span className="sm:hidden">🔗 Partager</span>
             </Button>
             <Button
               variant="outline"
               onClick={onExport}
               size="sm"
-              className="whitespace-nowrap flex-shrink-0 text-sm"
+              className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3"
               data-export-button
             >
-              📊 Exporter PowerPoint
+              <span className="hidden sm:inline">📊 Exporter PowerPoint</span>
+              <span className="sm:hidden">📊 Export</span>
             </Button>
             <Button
               variant="outline"
               onClick={handleEdit}
               size="sm"
-              className="whitespace-nowrap flex-shrink-0 text-sm"
+              className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3 hidden sm:inline-flex"
             >
               ✏️ Modifier les Paramètres
             </Button>
@@ -782,7 +841,7 @@ Généré avec Delva ROI Estimator
               variant="outline"
               onClick={() => window.location.href = '/estimator'}
               size="sm"
-              className="whitespace-nowrap flex-shrink-0 text-sm"
+              className="whitespace-nowrap text-xs sm:text-sm px-2 sm:px-3 hidden sm:inline-flex"
             >
               ✨ Nouvelle Initiative
             </Button>
