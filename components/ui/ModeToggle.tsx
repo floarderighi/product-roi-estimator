@@ -7,9 +7,9 @@ interface ModeToggleProps {
 
 export function ModeToggle({ isExpertMode, onChange }: ModeToggleProps) {
   return (
-    <div className="flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 mb-6">
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 mb-6">
       <div className="flex items-center gap-2">
-        <span className={`text-sm font-medium transition-colors ${!isExpertMode ? 'text-primary-700' : 'text-gray-500'}`}>
+        <span className={`text-xs sm:text-sm font-medium transition-colors ${!isExpertMode ? 'text-primary-700' : 'text-gray-500'}`}>
           ⚡ Mode Simple
         </span>
         <button
@@ -27,18 +27,18 @@ export function ModeToggle({ isExpertMode, onChange }: ModeToggleProps) {
             }`}
           />
         </button>
-        <span className={`text-sm font-medium transition-colors ${isExpertMode ? 'text-primary-700' : 'text-gray-500'}`}>
+        <span className={`text-xs sm:text-sm font-medium transition-colors ${isExpertMode ? 'text-primary-700' : 'text-gray-500'}`}>
           🔧 Mode Expert
         </span>
       </div>
 
-      <div className="ml-4 pl-4 border-l border-blue-300">
+      <div className="sm:ml-4 sm:pl-4 sm:border-l border-blue-300">
         {!isExpertMode ? (
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-600 text-center sm:text-left">
             <span className="font-semibold">Rapide :</span> Seulement les champs essentiels
           </p>
         ) : (
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-600 text-center sm:text-left">
             <span className="font-semibold">Contrôle total :</span> Tous les paramètres avancés
           </p>
         )}

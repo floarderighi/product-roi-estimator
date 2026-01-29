@@ -364,7 +364,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
 
           {selectedModel && (
             <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-gray-800">✨ Envie de tester rapidement ?</p>
                   <p className="text-xs text-gray-600">Pré-remplissez le formulaire avec un exemple réaliste</p>
@@ -373,7 +373,7 @@ export function InitiativeForm({ onComplete }: InitiativeFormProps) {
                   variant={isExampleActive ? "primary" : "secondary"}
                   size="sm"
                   onClick={handleToggleExample}
-                  className={`whitespace-nowrap flex-shrink-0 transition-all ${
+                  className={`whitespace-nowrap flex-shrink-0 transition-all w-full sm:w-auto ${
                     isExampleActive
                       ? 'shadow-md ring-2 ring-primary-300'
                       : ''

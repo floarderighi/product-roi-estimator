@@ -13,7 +13,7 @@ export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
           <React.Fragment key={index}>
             <div className="flex flex-col items-center relative">
               <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-200 ${
+                className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all duration-200 ${
                   index === currentStep
                     ? 'bg-gradient-to-br from-primary-500 to-purple-600 text-white shadow-md scale-105'
                     : index < currentStep
@@ -22,18 +22,18 @@ export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
                 }`}
               >
                 {index < currentStep ? (
-                  <span className="text-base">✓</span>
+                  <span className="text-sm sm:text-base">✓</span>
                 ) : (
                   index + 1
                 )}
               </div>
               <span
-                className={`mt-1.5 text-xs font-medium transition-all duration-200 ${
+                className={`mt-1.5 text-[10px] sm:text-xs font-medium transition-all duration-200 ${
                   index === currentStep
                     ? 'text-primary-600'
                     : index < currentStep
-                    ? 'text-gray-700'
-                    : 'text-gray-400'
+                    ? 'text-gray-700 hidden sm:block'
+                    : 'text-gray-400 hidden sm:block'
                 }`}
               >
                 {step}
@@ -45,7 +45,7 @@ export function ProgressBar({ steps, currentStep }: ProgressBarProps) {
               )}
             </div>
             {index < steps.length - 1 && (
-              <div className="flex-1 h-0.5 mx-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="flex-1 h-0.5 mx-1 sm:mx-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all duration-300 ease-out ${
                     index < currentStep
